@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+	--bg: #f8fafc;
+	--surface: #ffffff;
+	--muted: #64748b;
+	--text: #0f172a;
+	--primary: #2563eb;
+	--accent-blue: #eff6ff;
+	--card-border: #e6eefb;
+}
+
+/* Global resets and typography */
+html, body {
+	height: 100%;
+	margin: 0;
+	background: var(--bg);
+	font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+	color: var(--text);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+button { font-family: inherit; }
+

@@ -1,0 +1,38 @@
+<div class="dashboard-page">
+  <div class="page-header">
+    <h2 class="page-heading">Dashboard</h2>
+    <p class="page-subtitle">Overview of policy and procedure management activities</p>
+  </div>
+
+  <div class="stats-grid">
+    @for (stat of statCards; track stat.label) {
+      <app-stat-card [data]="stat"></app-stat-card>
+    }
+  </div>
+
+  <div class="quick-links-grid">
+    @for (link of quickLinks; track link.route) {
+      <app-quick-link-card [data]="link" (clicked)="navigateTo($event)"></app-quick-link-card>
+    }
+  </div>
+
+  <div class="activity-card">
+    <div class="activity-header">
+      <div class="activity-title">Recent Activity</div>
+      <button class="view-all-btn">View All</button>
+    </div>
+    <div class="activity-list">
+      @for (activity of recentActivity; track activity.text) {
+        <div class="activity-item">
+          <div class="activity-content">
+            <div class="activity-text">{{ activity.text }}</div>
+            <div class="activity-time">{{ activity.time }}</div>
+          </div>
+          <span class="status-badge" [class.completed]="activity.status === 'Completed'" 
+                [class.review]="activity.status === 'Requires Review'"
+                [class.published]="activity.status === 'Published'">{{ activity.status }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</div>

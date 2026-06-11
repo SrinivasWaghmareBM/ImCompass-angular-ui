@@ -1,0 +1,41 @@
+<div class="policy-card">
+    <div class="policy-header">
+      <div class="policy-title-section">
+        <h3 class="policy-title">{{ policy.title }} {{ policy.version }}</h3>
+        <span [class]="impactClass" class="impact-badge">
+          @if (policy.impact === 'High') { 🔴 }
+          @if (policy.impact === 'Medium') { 🟠 }
+          @if (policy.impact === 'Low') { 🟡 }
+          {{ policy.impact }} Impact
+        </span>
+      </div>
+    </div>
+  
+    <p class="policy-description">{{ policy.description }}</p>
+  
+    <div class="policy-meta">
+      <span>📅 {{ policy.date }}</span>
+      <span class="separator">•</span>
+      <span>Affected: {{ policy.affected.join(', ') }}</span>
+    </div>
+  
+    @if (policy.changes && policy.changes.length > 0) {
+      <div class="changes-section">
+        <div class="changes-title">Policy Changes</div>
+        <div class="changes-list">
+          @for (change of policy.changes; track change.type + change.description) {
+            <div class="change-item" [ngClass]="getChangeClass(change.type)">
+              <span class="change-type">{{ change.type }}:</span>
+              <span class="change-description">{{ change.description }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  
+    <div class="policy-actions">
+      <button class="btn btn-primary">View Full Policy</button>
+      <button class="btn btn-secondary">Download Summary</button>
+      <button class="btn btn-secondary">Mark as Reviewed</button>
+    </div>
+  </div>

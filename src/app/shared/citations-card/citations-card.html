@@ -1,0 +1,31 @@
+<div class="citations-card">
+  <div class="citations-header">Citations ({{ citations().length }})</div>
+  <div class="citations-list">
+    @for (citation of citations(); track citation.title; let i = $index) {
+      <div class="citation-item">
+        <div class="citation-header-row" (click)="toggleExpand(i)">
+          <div class="citation-meta">
+            <span class="citation-type">{{ citation.type }}</span>
+            <span class="citation-title">{{ citation.title }}</span>
+          </div>
+          <span class="citation-arrow" [class.expanded]="isExpanded(i)">
+            {{ isExpanded(i) ? '⌄' : '›' }}
+          </span>
+        </div>
+        
+        @if (isExpanded(i)) {
+          <div class="citation-details">
+            <div class="citation-page-date">
+              Page {{ citation.page }} 
+              @if (citation.date) {
+                <span class="citation-date">• {{ citation.date }}</span>
+              }
+            </div>
+            <div class="citation-snippet">{{ citation.snippet }}</div>
+            <a href="#" class="open-document">📄 Open document</a>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

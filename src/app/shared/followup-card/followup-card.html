@@ -1,0 +1,14 @@
+<div class="followup-card">
+  <div class="followup-header">
+    <span>Suggested Follow-ups</span>
+    <span class="followup-arrow">‹‹</span>
+  </div>
+  <div class="followup-list">
+    @for (followup of followups(); track followup) {
+      <div class="followup-item" (click)="onSelect(followup)">
+        <span>{{ followup }}</span>
+        <span class="search-icon">🔍</span>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,46 @@
+.followup-card {
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px;
+  }
+  
+  .followup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 12px;
+  }
+  
+  .followup-arrow {
+    color: #94a3b8;
+  }
+  
+  .followup-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .followup-item {
+    border: 1px solid #e2e8f0;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .followup-item:hover {
+    background-color: #eff6ff;
+  }
+  
+  .search-icon {
+    color: #94a3b8;
+  }

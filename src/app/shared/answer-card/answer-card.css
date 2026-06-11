@@ -1,0 +1,68 @@
+.answer-card {
+  background-color: var(--surface);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 20px 20px 18px 20px;
+  box-shadow: 0 1px 3px rgba(15,23,42,0.03);
+}
+
+.answer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.answer-label {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.confidence-badge {
+  background-color: transparent;
+  color: var(--primary);
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.answer-content {
+  background-color: var(--accent-blue);
+  border-left: 6px solid var(--primary);
+  padding: 18px 18px;
+  color: #243b53;
+  font-size: 15px;
+  line-height: 1.6;
+  border-radius: 6px;
+  margin-bottom: 14px;
+}
+
+.answer-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.rating-section {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #64748b;
+}
+
+.star {
+  color: #facc15;
+  cursor: pointer;
+  font-size: 26px;
+}
+
+.export-btn {
+  background: none;
+  border: none;
+  color: var(--primary);
+  cursor: pointer;
+  font-size: 14px;
+}

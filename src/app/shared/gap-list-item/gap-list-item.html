@@ -1,0 +1,8 @@
+<div class="gap-list-item" (click)="onClick()" [class.selected]="selected()">
+    <div class="gap-item-header">
+      <span [class]="getSeverityClass(gap().severity)" class="severity-badge">{{ gap().severity }}</span>
+      <span class="status-badge">{{ gap().status }}</span>
+    </div>
+    <div class="gap-item-title">{{ gap().title }}</div>
+    <div class="gap-item-domain">{{ gap().domain }}</div>
+  </div>

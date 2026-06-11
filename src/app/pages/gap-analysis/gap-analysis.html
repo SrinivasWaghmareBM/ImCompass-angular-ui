@@ -1,0 +1,258 @@
+<div class="gap-analysis-page">
+  <!-- Header -->
+  <div class="page-header">
+    <h2 class="page-heading">Gap Analysis</h2>
+    <p class="page-subtitle">Identified gaps in policies and procedures with recommended next steps</p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-row">
+    <div class="stat-box">
+      <div class="stat-label">Total Gaps</div>
+      <div class="stat-value">{{ gapStats.total }}</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">High Severity</div>
+      <div class="stat-value">{{ gapStats.high }}</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">In Review</div>
+      <div class="stat-value">{{ gapStats.inReview }}</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">Resolved</div>
+      <div class="stat-value">{{ gapStats.resolved }}</div>
+    </div>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="filter-tabs-row">
+    <div class="filter-tabs">
+      <button class="filter-tab" [class.active]="activeFilter() === 'all'" (click)="setFilter('all')">All Gaps</button>
+      <button class="filter-tab" [class.active]="activeFilter() === 'high'" (click)="setFilter('high')">High Severity</button>
+      <button class="filter-tab" [class.active]="activeFilter() === 'open'" (click)="setFilter('open')">Open</button>
+      <button class="filter-tab" [class.active]="activeFilter() === 'in-review'" (click)="setFilter('in-review')">In Review</button>
+    </div>
+    <button class="export-btn">Export Report</button>
+  </div>
+
+  <!-- Main Content -->
+  <div class="gap-content">
+    <!-- Left: Policy & Procedure Gaps -->
+    <div class="gap-list-section">
+      <div class="section-header">Policy & Procedure Gaps</div>
+      <div class="gap-list">
+        @for (gap of filteredGaps(); track gap.id) {
+          <div class="gap-list-item" 
+               (click)="selectGap(gap)"
+               [class.selected]="selectedGap()?.id === gap.id">
+            <div class="gap-item-header">
+              <span [class]="getSeverityClass(gap.severity)" class="severity-badge">{{ gap.severity }}</span>
+              <span class="status-badge" [class]="getStatusClass(gap.status)">{{ gap.status }}</span>
+            </div>
+            <div class="gap-item-title">{{ gap.title }}</div>
+            <div class="gap-item-domain">{{ gap.domain }}</div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Right: Gap Detail -->
+    @if (selectedGap()) {
+      <div class="gap-detail-section">
+        <div class="gap-detail-header">
+          <div class="gap-detail-title-row">
+            <h3 class="gap-detail-title">{{ selectedGap()!.title }}</h3>
+            <div class="gap-detail-actions">
+              <span [class]="getSeverityClass(selectedGap()!.severity)" class="severity-badge large">{{ selectedGap()!.severity }}</span>
+              <button class="close-btn" (click)="closeDetail()">✕ Close</button>
+            </div>
+          </div>
+          <div class="gap-detail-meta">
+            <span>Domain: {{ selectedGap()!.domain }}</span>
+            <span class="separator">•</span>
+            <span>Status: {{ selectedGap()!.status }}</span>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">
+            <span class="detail-icon">ℹ️</span>
+            Description
+          </div>
+          <div class="detail-text detail-text-bordered">{{ selectedGap()!.description }}</div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">
+            <span class="detail-icon">ℹ️</span>
+            Impact
+          </div>
+          <div class="detail-text detail-text-bordered">{{ selectedGap()!.impact }}</div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">
+            <span class="detail-icon">✅</span>
+            Recommendation
+          </div>
+          <div class="detail-text detail-text-bordered">{{ selectedGap()!.recommendation }}</div>
+        </div>
+
+        <div class="next-steps-section">
+          <div class="next-steps-header">Next Steps</div>
+          <div class="next-steps-list">
+            <div class="next-step-item">
+              <input type="checkbox" id="step1">
+              <label for="step1">Review gap with policy owner</label>
+              <span class="step-arrow">›</span>
+            </div>
+            <div class="next-step-item">
+              <input type="checkbox" id="step2">
+              <label for="step2">Draft policy update or new procedure</label>
+              <span class="step-arrow">›</span>
+            </div>
+            <div class="next-step-item">
+              <input type="checkbox" id="step3">
+              <label for="step3">Submit for stakeholder review</label>
+              <span class="step-arrow">›</span>
+            </div>
+            <div class="next-step-item">
+              <input type="checkbox" id="step4">
+              <label for="step4">Implement and communicate changes</label>
+              <span class="step-arrow">›</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="gap-actions">
+          <button class="btn btn-primary">Assign Owner</button>
+          <button class="btn btn-secondary">Update Status</button>
+          <button class="btn btn-secondary">Export</button>
+        </div>
+      </div>
+    } @else {
+      <div class="gap-detail-placeholder">
+        <div class="placeholder-content">
+          <div class="placeholder-icon">📋</div>
+          <div class="placeholder-text">Select a gap from the list to view details</div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Query Gap Analysis Section -->
+  <div class="query-gap-section">
+    <div class="query-gap-header">
+      <div>
+        <div class="query-gap-title">
+          <span class="query-gap-icon">⚠️</span>
+          Query Gap Analysis
+        </div>
+        <div class="query-gap-subtitle">
+          Queries repeatedly raised by users where returned answers have low confidence — indicating gaps in the underlying policy and procedure data sources.
+        </div>
+      </div>
+    </div>
+
+    <!-- Query Stats -->
+    <div class="query-stats-row">
+      <div class="query-stat-box">
+        <div class="query-stat-value">{{ queryGapStats.totalQueries }}</div>
+        <div class="query-stat-label">Total queries</div>
+      </div>
+      <div class="query-stat-box">
+        <div class="query-stat-value">{{ queryGapStats.activeQueries }}</div>
+        <div class="query-stat-label">Active queries</div>
+      </div>
+      <div class="query-stat-box">
+        <div class="query-stat-value">{{ queryGapStats.avgConfidence }}%</div>
+        <div class="query-stat-label">Avg confidence</div>
+      </div>
+    </div>
+
+    <div class="query-gap-content">
+      <!-- Left: Query List -->
+      <div class="query-list-section">
+        <div class="query-list">
+          @for (query of queryGapItems; track query.id) {
+            <div class="query-list-item" 
+                 (click)="selectQueryGap(query)"
+                 [class.selected]="selectedQueryGap()?.id === query.id">
+              <div class="query-item-header">
+                <span class="query-domain-badge" [class]="getRiskClass(query.riskLevel)">{{ query.riskLevel }}</span>
+                <span class="query-confidence">{{ query.avgConfidence }}% conf.</span>
+              </div>
+              <div class="query-item-text">{{ query.query }}</div>
+              <div class="query-item-meta">
+                <span>{{ query.timesQueried }} queries</span>
+                <span class="separator">•</span>
+                <span>last {{ query.lastQueried }}</span>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Right: Query Detail -->
+      @if (selectedQueryGap()) {
+        <div class="query-detail-section">
+          <div class="query-detail-header">
+            <div class="query-detail-badges">
+              <span class="query-detail-domain-badge" [class]="getRiskClass(selectedQueryGap()!.riskLevel)">{{ selectedQueryGap()!.riskLevel }}</span>
+              <span class="query-detail-confidence">{{ selectedQueryGap()!.avgConfidence }}% conf.</span>
+              <button class="close-btn" (click)="closeQueryDetail()">✕ Close</button>
+            </div>
+            <div class="query-detail-query">{{ selectedQueryGap()!.query }}</div>
+          </div>
+
+          <div class="query-detail-stats">
+            <div class="query-stat-item">
+              <div class="query-stat-item-value">{{ selectedQueryGap()!.timesQueried }}</div>
+              <div class="query-stat-item-label">Times queried</div>
+            </div>
+            <div class="query-stat-item">
+              <div class="query-stat-item-value">{{ selectedQueryGap()!.avgConfidence }}%</div>
+              <div class="query-stat-item-label">Avg confidence</div>
+            </div>
+            <div class="query-stat-item">
+              <div class="query-stat-item-value">{{ selectedQueryGap()!.lastQueried }}</div>
+              <div class="query-stat-item-label">Last queried</div>
+            </div>
+          </div>
+
+          <div class="query-detail-content">
+            <div class="query-insight-section">
+              <div class="query-insight-header">
+                <span class="query-insight-icon">ℹ️</span>
+                Gap Insight
+              </div>
+              <div class="query-insight-text">{{ selectedQueryGap()!.gapInsight }}</div>
+            </div>
+
+            <div class="query-recommendation-section">
+              <div class="query-recommendation-header">
+                <span class="query-recommendation-icon">✅</span>
+                Recommended Action
+              </div>
+              <div class="query-recommendation-text">{{ selectedQueryGap()!.recommendedAction }}</div>
+            </div>
+          </div>
+
+          <div class="query-actions">
+            <button class="btn btn-primary">Raise Policy Gap</button>
+            <button class="btn btn-secondary">Assign to Policy Owner</button>
+            <button class="btn btn-secondary">Export</button>
+          </div>
+        </div>
+      } @else {
+        <div class="query-detail-placeholder">
+          <div class="placeholder-content">
+            <div class="placeholder-icon">🔍</div>
+            <div class="placeholder-text">Select a query from the list to view gap analysis details</div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

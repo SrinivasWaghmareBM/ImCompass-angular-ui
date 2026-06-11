@@ -1,0 +1,128 @@
+.citations-card {
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.2s ease;
+}
+
+.citations-card:hover {
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  border-color: #cbd5e1;
+  transform: translateX(2px);
+}
+
+.citations-header {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+.citations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.citation-item {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease;
+}
+
+.citation-item:hover {
+  background-color: #f8fafc;
+  border-color: #94a3b8;
+}
+
+.citation-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.citation-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.citation-type {
+  background-color: #dbeafe;
+  color: #1e40af;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-family: monospace;
+  font-weight: 600;
+}
+
+.citation-title {
+  font-weight: 500;
+  color: #0f172a;
+}
+
+.citation-arrow {
+  color: #94a3b8;
+  font-size: 18px;
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+
+.citation-arrow.expanded {
+  transform: rotate(180deg);
+}
+
+.citation-details {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #e2e8f0;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.citation-page-date {
+  color: #64748b;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.citation-date {
+  color: #64748b;
+}
+
+.citation-snippet {
+  color: #475569;
+  font-size: 13px;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.open-document {
+  color: #2563eb;
+  font-size: 12px;
+  text-decoration: none;
+  display: inline-block;
+  padding: 4px 0;
+  transition: text-decoration 0.1s ease;
+}
+
+.open-document:hover {
+  text-decoration: underline;
+}

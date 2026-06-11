@@ -1,0 +1,174 @@
+<div class="knowledge-page">
+  <div class="page-header">
+    <h2 class="page-heading">Knowledge & Queries</h2>
+    <p class="page-subtitle">Ask questions across your enterprise knowledge base and get grounded answers with citations</p>
+  </div>
+
+  <!-- Search Section -->
+  <div class="search-section">
+    <div class="search-input-row">
+      <div class="search-input-wrapper">
+        <input 
+          type="text" 
+          [value]="searchQuery()" 
+          (input)="searchQuery.set($any($event.target).value)"
+          (keyup.enter)="performSearch()" 
+          placeholder="What is the answer you're looking for?" 
+          class="search-input">
+      </div>
+      <button (click)="performSearch()" class="search-btn">🔍 Search</button>
+    </div>
+
+    <div class="filters-row">
+      <div class="filter-dropdown">
+        <button class="filter-btn" (click)="toggleFilterDropdown('domain')">
+          🔽 Domain
+        </button>
+        @if (activeFilterDropdown() === 'domain') {
+          <div class="filter-menu">
+            @for (option of domainOptionsList; track option) {
+              <div class="filter-option" (click)="selectFilterOption('domain', option)">{{ option }}</div>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="filter-dropdown">
+        <button class="filter-btn" (click)="toggleFilterDropdown('region')">
+          🔽 Region
+        </button>
+        @if (activeFilterDropdown() === 'region') {
+          <div class="filter-menu">
+            @for (option of regionOptionsList; track option) {
+              <div class="filter-option" (click)="selectFilterOption('region', option)">{{ option }}</div>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="filter-dropdown">
+        <button class="filter-btn" (click)="toggleFilterDropdown('docType')">
+          🔽 Document Type
+        </button>
+        @if (activeFilterDropdown() === 'docType') {
+          <div class="filter-menu">
+            @for (option of docTypeOptionsList; track option) {
+              <div class="filter-option" (click)="selectFilterOption('docType', option)">{{ option }}</div>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="filter-dropdown">
+        <button class="filter-btn" (click)="toggleFilterDropdown('updateFreq')">
+          🔽 Update Frequency
+        </button>
+        @if (activeFilterDropdown() === 'updateFreq') {
+          <div class="filter-menu">
+            @for (option of updateFreqOptionsList; track option) {
+              <div class="filter-option" (click)="selectFilterOption('updateFreq', option)">{{ option }}</div>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="filter-dropdown">
+        <button class="filter-btn date-range-btn" (click)="toggleFilterDropdown('dateRange')">
+          📅 Date Range
+        </button>
+        @if (activeFilterDropdown() === 'dateRange') {
+          <div class="filter-menu">
+            @for (option of dateRangeOptionsList; track option) {
+              <div class="filter-option" (click)="selectFilterOption('dateRange', option)">{{ option }}</div>
+            }
+          </div>
+        }
+      </div>
+
+      <button class="apply-btn">Apply</button>
+    </div>
+
+    <!-- Selected Filters Display -->
+    @if (hasActiveFilters()) {
+      <div class="selected-filters-row">
+        <div class="selected-filters-list">
+          @if (selectedFilters().domain !== 'All Domains') {
+            <span class="filter-chip">
+              {{ selectedFilters().domain }}
+              <button class="chip-remove" (click)="clearSingleFilter('domain')">✕</button>
+            </span>
+          }
+          @if (selectedFilters().region !== 'All Regions') {
+            <span class="filter-chip">
+              {{ selectedFilters().region }}
+              <button class="chip-remove" (click)="clearSingleFilter('region')">✕</button>
+            </span>
+          }
+          @if (selectedFilters().docType !== 'All Types') {
+            <span class="filter-chip">
+              {{ selectedFilters().docType }}
+              <button class="chip-remove" (click)="clearSingleFilter('docType')">✕</button>
+            </span>
+          }
+          @if (selectedFilters().updateFreq !== 'All Frequencies') {
+            <span class="filter-chip">
+              {{ selectedFilters().updateFreq }}
+              <button class="chip-remove" (click)="clearSingleFilter('updateFreq')">✕</button>
+            </span>
+          }
+          @if (selectedFilters().dateRange !== 'Last 30 days') {
+            <span class="filter-chip">
+              {{ selectedFilters().dateRange }}
+              <button class="chip-remove" (click)="clearSingleFilter('dateRange')">✕</button>
+            </span>
+          }
+        </div>
+        <button class="clear-all-link" (click)="clearAllFilters()">✕ Clear all</button>
+      </div>
+    }
+  </div>
+
+  <!-- Empty State -->
+  @if (!hasSearched()) {
+    <div class="empty-state">
+      <div class="empty-icon">🔍</div>
+      <div class="empty-title">No query entered</div>
+      <div class="empty-subtitle">Enter a question above to search policies and procedures</div>
+    </div>
+  }
+
+  <!-- Results State -->
+  @if (hasSearched() && hasResults()) {
+    <div class="results-wrapper">
+      
+      <!-- Answer + Citations Row -->
+      <div class="top-row">
+        
+        <!-- Answer Card Component -->
+        <app-answer-card 
+          [answer]="answerText()" 
+          [confidence]="confidenceScore()"
+          (clicked)="onExportAnswer()">
+        </app-answer-card>
+
+        <!-- Citations Card Component -->
+        <app-citations-card [citations]="citationsList()"></app-citations-card>
+
+      </div>
+
+      <!-- Suggested Follow-ups + Next Actions Row -->
+      <div class="bottom-row">
+        
+        <!-- Suggested Follow-ups Component -->
+        <app-followup-card 
+          [followups]="suggestedFollowUpsList()" 
+          (selected)="onFollowupSelected($event)">
+        </app-followup-card>
+
+        <!-- Next Actions Component -->
+        <app-next-actions-card [actions]="nextActionsList()"></app-next-actions-card>
+
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,16 @@
+<div class="answer-card">
+  <div class="answer-header">
+    <div class="answer-label">Answer</div>
+    <div>Confidence: <span class="confidence-badge">{{ confidence() }}%</span></div>
+  </div>
+  <div class="answer-content">
+    {{ answer() }}
+  </div>
+  <div class="answer-footer">
+    <div class="rating-section">
+      Rate this answer: 
+      <span class="star">☆</span><span class="star">☆</span><span class="star">☆</span><span class="star">☆</span><span class="star">☆</span>
+    </div>
+    <button class="export-btn" (click)="onExport()">Export</button>
+  </div>
+</div>

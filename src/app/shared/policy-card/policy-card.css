@@ -1,0 +1,96 @@
+.policy-card {
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+  
+  .policy-title-section {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  
+  .policy-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0;
+  }
+  
+  .impact-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  
+  .impact-badge.high { background-color: #fee2e2; color: #b91c1c; }
+  .impact-badge.medium { background-color: #ffedd5; color: #c2410c; }
+  .impact-badge.low { background-color: #fefce8; color: #854d0e; }
+  
+  .policy-description {
+    color: #475569;
+    font-size: 14px;
+    margin: 12px 0 16px;
+    line-height: 1.5;
+  }
+  
+  .policy-meta {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 16px;
+  }
+  
+  .separator { margin: 0 8px; }
+  
+  .changes-section { margin-bottom: 16px; }
+  .changes-title { font-size: 14px; font-weight: 500; color: #334155; margin-bottom: 8px; }
+  
+  .changes-list { display: flex; flex-direction: column; gap: 6px; }
+  
+  .change-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+  }
+  
+  .change-item.added { background-color: #f0fdf4; color: #166534; }
+  .change-item.modified { background-color: #eff6ff; color: #1e40af; }
+  .change-item.removed { background-color: #fef2f2; color: #991b1b; }
+  
+  .change-type { font-weight: 600; min-width: 70px; }
+  
+  .policy-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  
+  .btn {
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+  }
+  
+  .btn-primary { background-color: #2563eb; color: white; }
+  .btn-primary:hover { background-color: #1d4ed8; }
+  
+  .btn-secondary { background-color: white; color: #475569; border: 1px solid #cbd5e1; }
+  .btn-secondary:hover { background-color: #f8fafc; }

@@ -1,0 +1,47 @@
+<div class="next-actions-card">
+  <div class="next-actions-header">
+    <span>Next Actions</span>
+    <span class="next-actions-link">Full Next Steps ›</span>
+  </div>
+  <div class="next-actions-list">
+    @for (action of actions(); track action.type; let i = $index) {
+      <div class="action-item" [class.immediate]="action.type === 'IMMEDIATE'" 
+           [class.within-24hrs]="action.type === 'WITHIN 24HRS'"
+           [class.notify]="action.type === 'NOTIFY'"
+           [class.followup]="action.type === 'FOLLOW-UP'">
+        
+        <div class="action-header" (click)="toggleExpand(i)">
+          <div class="action-header-content">
+            <div class="action-badge">
+              @if (action.type === 'IMMEDIATE') { ⚠️ }
+              @if (action.type === 'WITHIN 24HRS') { 📋 }
+              @if (action.type === 'NOTIFY') { 📧 }
+              @if (action.type === 'FOLLOW-UP') { ✅ }
+              {{ action.type }}
+            </div>
+            <div class="action-title">{{ action.title }}</div>
+          </div>
+          <span class="action-arrow" [class.expanded]="isExpanded(i)">
+            {{ isExpanded(i) ? '⌄' : '›' }}
+          </span>
+        </div>
+
+        @if (isExpanded(i)) {
+          <div class="action-details">
+            @if (action.description) {
+              <div class="action-description">{{ action.description }}</div>
+            }
+            
+            @if (action.actions && action.actions.length > 0) {
+              <div class="action-buttons">
+                @for (btn of action.actions; track btn) {
+                  <button class="action-btn">{{ btn }}</button>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
