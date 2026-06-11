@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { StatCardComponent, StatCardData } from '../../shared/stat-card/stat-card';
 import { QuickLinkCardComponent, QuickLinkData } from '../../shared/quick-link-card/quick-link-card';
 import { recentActivity } from './dashboard-data';
@@ -26,7 +27,9 @@ export class DashboardComponent {
     { icon: '📈', title: 'Change Impact', subtitle: 'Assess impact of proposed changes', route: 'change-impact' }
   ];
 
+  constructor(private router: Router) {}
+
   navigateTo(route: string) {
-    window.location.href = '/' + route;
+    this.router.navigate([route]);
   }
 }
