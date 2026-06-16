@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-answer-card',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './answer-card.html',
-  styleUrl: './answer-card.css'
+  styleUrls: ['./answer-card.css']
 })
 export class AnswerCardComponent {
   answer = input.required<string>();

@@ -12,17 +12,22 @@
             {{ isExpanded(i) ? '⌄' : '›' }}
           </span>
         </div>
+        <div class="citation-page-date">
+          <i class="fas fa-file"></i>
+          Page {{ citation.page }} 
+          @if (citation.date) {
+            <span class="citation-date">• 
+              <!-- add Calendar icon -->
+              <i class="fas fa-calendar-alt"></i>
+              : {{ citation.date  | date:'dd MMM yyyy'  }}</span>
+          }
+        </div>
         
         @if (isExpanded(i)) {
           <div class="citation-details">
-            <div class="citation-page-date">
-              Page {{ citation.page }} 
-              @if (citation.date) {
-                <span class="citation-date">• {{ citation.date }}</span>
-              }
-            </div>
+            
             <div class="citation-snippet">{{ citation.snippet }}</div>
-            <a href="#" class="open-document">📄 Open document</a>
+            <a href="?" class="open-document">📄 Open document</a>
           </div>
         }
       </div>

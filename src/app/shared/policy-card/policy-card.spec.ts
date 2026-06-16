@@ -20,7 +20,7 @@ describe('PolicyCardComponent', () => {
       version: 'v1.0',
       impact: 'Low',
       description: 'Test',
-      date: '2026-01-01',
+      date: new Date('2026-01-01'),
       affected: [],
       changes: []
     };

@@ -50,11 +50,16 @@
     gap: 4px;
   }
   
+  .nav-icon {
+    margin-right: 8px;
+    font-size: 28px;
+  }
+
   .nav-item {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 16px;
+    padding: 16px 16px;
     border-radius: 8px;
     color: #cbd5e1;
     text-decoration: none;
@@ -63,12 +68,12 @@
   }
   
   .nav-item:hover {
-    background-color: #1e2937;
+    background-color: #243142;
     color: white;
   }
   
   .nav-item.active {
-      background-color: var(--primary);
+      background-color: #2563eb;
       color: white;
       box-shadow: 0 2px 10px rgba(37,99,235,0.08);
     }

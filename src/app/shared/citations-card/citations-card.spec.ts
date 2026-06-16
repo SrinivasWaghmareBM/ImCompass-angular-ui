@@ -1,22 +1,32 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CitationsCard } from './citations-card';
+import { CitationsCardComponent } from './citations-card';
 
 describe('CitationsCard', () => {
-  let component: CitationsCard;
-  let fixture: ComponentFixture<CitationsCard>;
+  let component: CitationsCardComponent;
+  let fixture: ComponentFixture<CitationsCardComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CitationsCard],
+      imports: [CitationsCardComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CitationsCard);
+    fixture = TestBed.createComponent(CitationsCardComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('citations', [
+          {
+            type: 'POL',
+            title: 'overdrafts_policy.pdf',
+            page: 7,
+            date: new Date('01-01-2025'),
+            snippet: 'ISA and SIPPs accounts must maintain positive balances...',
+            sourceUrl: 'https://example.com/overdrafts_policy.pdf',
+          }]);
+    fixture.detectChanges();
     await fixture.whenStable();
   });
 
-  it('should create', () => {
+  it('should create component', () => {
     expect(component).toBeTruthy();
   });
 });

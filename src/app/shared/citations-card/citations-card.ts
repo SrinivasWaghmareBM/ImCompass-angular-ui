@@ -4,9 +4,10 @@ import { Citation } from '../../models';
 
 @Component({
   selector: 'app-citations-card',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './citations-card.html',
-  styleUrl: './citations-card.css'
+  styleUrls: ['./citations-card.css']
 })
 export class CitationsCardComponent {
   citations = input.required<Citation[]>();

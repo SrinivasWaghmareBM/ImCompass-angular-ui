@@ -1,0 +1,242 @@
+@use 'sass:map';
+
+// ============================================================
+// Global Responsive System
+// ============================================================
+// Breakpoints (mobile-first):
+//   xs  — phones portrait      < 480px
+//   sm  — phones landscape     480px  – 767px
+//   md  — tablets              768px  – 1023px
+//   lg  — small desktops       1024px – 1279px
+//   xl  — large desktops       1280px – 1535px
+//   2xl — wide / TV screens    ≥ 1536px
+// ============================================================
+
+// ─── Breakpoint map ──────────────────────────────────────────
+$breakpoints: (
+  'xs':  480px,
+  'sm':  768px,
+  'md':  1024px,
+  'lg':  1280px,
+  'xl':  1536px,
+);
+
+// ─── Mixins ──────────────────────────────────────────────────
+
+/// Styles apply from $bp upward (mobile-first min-width).
+/// Usage: @include respond-up('sm') { ... }
+@mixin respond-up($bp) {
+  $value: map.get($breakpoints, $bp);
+  @if $value == null {
+    @error "Unknown breakpoint `#{$bp}`. Available: #{map.keys($breakpoints)}";
+  }
+  @media (min-width: $value) { @content; }
+}
+
+/// Styles apply BELOW $bp (max-width helper).
+/// Usage: @include respond-down('sm') { ... }
+@mixin respond-down($bp) {
+  $value: map.get($breakpoints, $bp);
+  @if $value == null {
+    @error "Unknown breakpoint `#{$bp}`. Available: #{map.keys($breakpoints)}";
+  }
+  @media (max-width: calc(#{$value} - 1px)) { @content; }
+}
+
+/// Styles apply BETWEEN $lower and $upper.
+/// Usage: @include respond-between('sm', 'md') { ... }
+@mixin respond-between($lower, $upper) {
+  $min: map.get($breakpoints, $lower);
+  $max: map.get($breakpoints, $upper);
+  @if $min == null or $max == null {
+    @error "Unknown breakpoint in range. Available: #{map.keys($breakpoints)}";
+  }
+  @media (min-width: $min) and (max-width: calc(#{$max} - 1px)) { @content; }
+}
+
+/// Convenience alias — phone portrait only (< 480px)
+@mixin mobile-only { @include respond-down('xs') { @content; } }
+
+/// Convenience alias — phone only (< 768px)
+@mixin phone-only { @include respond-down('sm') { @content; } }
+
+/// Convenience alias — tablet and above
+@mixin tablet-up { @include respond-up('sm') { @content; } }
+
+/// Convenience alias — desktop and above
+@mixin desktop-up { @include respond-up('md') { @content; } }
+
+/// Convenience alias — large desktop and above
+@mixin wide-up { @include respond-up('lg') { @content; } }
+
+// ─── CSS custom properties (fluid spacing & type scale) ──────
+
+:root {
+  // Fluid base font size — 14px on mobile, 16px on desktop
+  --base-font-size: clamp(14px, 1.5vw, 16px);
+
+  // Fluid spacing scale
+  --space-xs:   clamp(4px,  0.5vw, 6px);
+  --space-sm:   clamp(8px,  1vw,   12px);
+  --space-md:   clamp(12px, 1.5vw, 20px);
+  --space-lg:   clamp(16px, 2vw,   32px);
+  --space-xl:   clamp(24px, 3vw,   48px);
+  --space-2xl:  clamp(32px, 4vw,   64px);
+
+  // Fluid container max-widths
+  --container-sm:   540px;
+  --container-md:   768px;
+  --container-lg:   1024px;
+  --container-xl:   1280px;
+  --container-2xl:  1536px;
+
+  // Responsive card padding (used by all cards / panels)
+  --card-padding-x: clamp(16px, 4vw, 40px);
+  --card-padding-y: clamp(16px, 3vw, 32px);
+
+  // Responsive form field gap
+  --form-gap: clamp(12px, 1.5vw, 20px);
+}
+
+// ─── Global responsive baseline ──────────────────────────────
+
+html {
+  font-size: var(--base-font-size);
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+// All images are responsive by default
+img,
+video,
+svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+// ─── Fluid container utility ─────────────────────────────────
+// Usage: <div class="container"> or <div class="container container--sm">
+
+.container {
+  width: 100%;
+  max-width: var(--container-xl);
+  margin-inline: auto;
+  padding-inline: clamp(16px, 4vw, 48px);
+
+  &--sm  { max-width: var(--container-sm);  }
+  &--md  { max-width: var(--container-md);  }
+  &--lg  { max-width: var(--container-lg);  }
+  &--xl  { max-width: var(--container-xl);  }
+  &--2xl { max-width: var(--container-2xl); }
+  &--full { max-width: 100%; }
+}
+
+// ─── Responsive grid utility ─────────────────────────────────
+// Usage: <div class="responsive-grid">
+//   Automatically switches from single column on mobile
+//   to a multi-column grid on wider screens.
+
+.responsive-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--form-gap);
+
+  @include tablet-up {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include desktop-up {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  &--2col {
+    @include tablet-up {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  &--auto {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  }
+}
+
+// ─── Responsive stack utility ────────────────────────────────
+// A flex row on desktop, stacks to column on mobile.
+// Usage: <div class="responsive-stack">
+
+.responsive-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--form-gap);
+
+  > * { flex: 1 1 200px; }
+
+  @include phone-only {
+    flex-direction: column;
+
+    > * { flex: unset; width: 100%; }
+  }
+}
+
+// ─── Material form fields — always full-width ─────────────────
+// Ensures mat-form-field fills its container on all breakpoints.
+
+mat-form-field,
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+// ─── Material card padding — fluid ───────────────────────────
+
+mat-card,
+.mat-mdc-card {
+  // Ensure cards don't overflow on small screens
+  max-width: 100%;
+  overflow: hidden;
+}
+
+// ─── Buttons — touch-friendly minimum size ───────────────────
+
+button,
+a[role="button"],
+[mat-button],
+[mat-flat-button],
+[mat-stroked-button],
+[mat-raised-button],
+[mat-icon-button] {
+  min-height: 44px;   // WCAG 2.5.5 touch target
+  min-width: 44px;
+}
+
+// ─── Typography fluid scale ──────────────────────────────────
+
+h1 { font-size: clamp(1.5rem,   3vw,  2.5rem);  }
+h2 { font-size: clamp(1.25rem,  2.5vw, 2rem);   }
+h3 { font-size: clamp(1.125rem, 2vw,  1.75rem); }
+h4 { font-size: clamp(1rem,     1.5vw, 1.5rem); }
+h5 { font-size: clamp(0.9rem,   1.2vw, 1.25rem);}
+h6 { font-size: clamp(0.85rem,  1vw,  1.125rem);}
+
+// ─── Visibility helpers ──────────────────────────────────────
+
+.hide-on-mobile {
+  @include phone-only { display: none !important; }
+}
+
+.hide-on-tablet {
+  @include respond-between('sm', 'md') { display: none !important; }
+}
+
+.hide-on-desktop {
+  @include desktop-up { display: none !important; }
+}
+
+.show-on-mobile-only {
+  @include tablet-up { display: none !important; }
+}

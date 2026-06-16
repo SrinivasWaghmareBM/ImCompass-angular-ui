@@ -1,12 +1,7 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { QuickLinkData } from '../../models';
 
-export interface QuickLinkData {
-  icon: string;
-  title: string;
-  subtitle: string;
-  route: string;
-}
 
 @Component({
   selector: 'app-quick-link-card',

@@ -1,8 +1,4 @@
-export interface ActivityItem {
-  text: string;
-  time: string;
-  status: string;
-}
+import { ActivityItem } from '../../models';
 
 export const recentActivity: ActivityItem[] = [
   { text: 'Query completed: Trade allocation procedures for fixed income', time: '2 hours ago', status: 'Completed' },

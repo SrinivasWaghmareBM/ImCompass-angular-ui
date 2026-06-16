@@ -26,7 +26,12 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+              "node_modules/material-icons/iconfont/material-icons.css",
+              "node_modules/material-symbols/outlined.css",
+              "src/styles/_responsive.scss",
+              "src/styles/theme.scss",
+              "src/styles.scss"
             ]
           },
           "configurations": {
@@ -39,8 +44,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "10kB",
+                  "maximumError": "12kB"
                 }
               ],
               "outputHashing": "all"

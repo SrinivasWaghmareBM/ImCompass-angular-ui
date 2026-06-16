@@ -4,17 +4,19 @@
     <p class="page-subtitle">Overview of policy and procedure management activities</p>
   </div>
 
+  <!-- Stats Cards -->
   <div class="stats-grid">
     @for (stat of statCards; track stat.label) {
       <app-stat-card [data]="stat"></app-stat-card>
     }
   </div>
 
+  <!-- Quick Link Cards -->
   <div class="quick-links-grid">
     @for (link of quickLinks; track link.route) {
       <app-quick-link-card [data]="link" (clicked)="navigateTo($event)"></app-quick-link-card>
     }
-  </div>
+  </div> 
 
   <div class="activity-card">
     <div class="activity-header">

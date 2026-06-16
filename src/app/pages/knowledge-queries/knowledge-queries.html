@@ -1,4 +1,4 @@
-<div class="knowledge-page">
+<div class="knowledge-queries-page">
   <div class="page-header">
     <h2 class="page-heading">Knowledge & Queries</h2>
     <p class="page-subtitle">Ask questions across your enterprise knowledge base and get grounded answers with citations</p>
@@ -6,6 +6,8 @@
 
   <!-- Search Section -->
   <div class="search-section">
+
+    <!-- Search Input + Button -->
     <div class="search-input-row">
       <div class="search-input-wrapper">
         <input 
@@ -19,10 +21,13 @@
       <button (click)="performSearch()" class="search-btn">🔍 Search</button>
     </div>
 
+    <!-- Filters - Only 3 dropdowns -->
     <div class="filters-row">
+      
+      <!-- Domain -->
       <div class="filter-dropdown">
         <button class="filter-btn" (click)="toggleFilterDropdown('domain')">
-          🔽 Domain
+          {{ getFilterDisplayValue('domain') }} ▼
         </button>
         @if (activeFilterDropdown() === 'domain') {
           <div class="filter-menu">
@@ -33,22 +38,10 @@
         }
       </div>
 
-      <div class="filter-dropdown">
-        <button class="filter-btn" (click)="toggleFilterDropdown('region')">
-          🔽 Region
-        </button>
-        @if (activeFilterDropdown() === 'region') {
-          <div class="filter-menu">
-            @for (option of regionOptionsList; track option) {
-              <div class="filter-option" (click)="selectFilterOption('region', option)">{{ option }}</div>
-            }
-          </div>
-        }
-      </div>
-
+      <!-- Document Type -->
       <div class="filter-dropdown">
         <button class="filter-btn" (click)="toggleFilterDropdown('docType')">
-          🔽 Document Type
+          {{ getFilterDisplayValue('docType') }} ▼
         </button>
         @if (activeFilterDropdown() === 'docType') {
           <div class="filter-menu">
@@ -59,27 +52,15 @@
         }
       </div>
 
+      <!-- Date Last Updated -->
       <div class="filter-dropdown">
-        <button class="filter-btn" (click)="toggleFilterDropdown('updateFreq')">
-          🔽 Update Frequency
+        <button class="filter-btn" (click)="toggleFilterDropdown('dateLastUpdated')">
+          {{ getFilterDisplayValue('dateLastUpdated') }} ▼
         </button>
-        @if (activeFilterDropdown() === 'updateFreq') {
+        @if (activeFilterDropdown() === 'dateLastUpdated') {
           <div class="filter-menu">
-            @for (option of updateFreqOptionsList; track option) {
-              <div class="filter-option" (click)="selectFilterOption('updateFreq', option)">{{ option }}</div>
-            }
-          </div>
-        }
-      </div>
-
-      <div class="filter-dropdown">
-        <button class="filter-btn date-range-btn" (click)="toggleFilterDropdown('dateRange')">
-          📅 Date Range
-        </button>
-        @if (activeFilterDropdown() === 'dateRange') {
-          <div class="filter-menu">
-            @for (option of dateRangeOptionsList; track option) {
-              <div class="filter-option" (click)="selectFilterOption('dateRange', option)">{{ option }}</div>
+            @for (option of dateLastUpdatedOptionsList; track option) {
+              <div class="filter-option" (click)="selectFilterOption('dateLastUpdated', option)">{{ option }}</div>
             }
           </div>
         }
@@ -88,7 +69,7 @@
       <button class="apply-btn">Apply</button>
     </div>
 
-    <!-- Selected Filters Display -->
+    <!-- Selected Filters -->
     @if (hasActiveFilters()) {
       <div class="selected-filters-row">
         <div class="selected-filters-list">
@@ -98,28 +79,16 @@
               <button class="chip-remove" (click)="clearSingleFilter('domain')">✕</button>
             </span>
           }
-          @if (selectedFilters().region !== 'All Regions') {
-            <span class="filter-chip">
-              {{ selectedFilters().region }}
-              <button class="chip-remove" (click)="clearSingleFilter('region')">✕</button>
-            </span>
-          }
           @if (selectedFilters().docType !== 'All Types') {
             <span class="filter-chip">
               {{ selectedFilters().docType }}
               <button class="chip-remove" (click)="clearSingleFilter('docType')">✕</button>
             </span>
           }
-          @if (selectedFilters().updateFreq !== 'All Frequencies') {
+          @if (selectedFilters().dateLastUpdated !== 'Last 30 days') {
             <span class="filter-chip">
-              {{ selectedFilters().updateFreq }}
-              <button class="chip-remove" (click)="clearSingleFilter('updateFreq')">✕</button>
-            </span>
-          }
-          @if (selectedFilters().dateRange !== 'Last 30 days') {
-            <span class="filter-chip">
-              {{ selectedFilters().dateRange }}
-              <button class="chip-remove" (click)="clearSingleFilter('dateRange')">✕</button>
+              {{ selectedFilters().dateLastUpdated }}
+              <button class="chip-remove" (click)="clearSingleFilter('dateLastUpdated')">✕</button>
             </span>
           }
         </div>
@@ -137,37 +106,87 @@
     </div>
   }
 
-  <!-- Results State -->
+  <!-- Results -->
   @if (hasSearched() && hasResults()) {
     <div class="results-wrapper">
       
-      <!-- Answer + Citations Row -->
+      <!-- Answer + Citations -->
       <div class="top-row">
         
-        <!-- Answer Card Component -->
-        <app-answer-card 
-          [answer]="answerText()" 
-          [confidence]="confidenceScore()"
-          (clicked)="onExportAnswer()">
-        </app-answer-card>
+        <!-- Answer Card -->
+        <div class="answer-card">
+          <div class="answer-header">
+            <div class="answer-label">Answer</div>
+            <div class="confidence-badge">Confidence: {{ confidenceScore() | percent: '1.0-2' }}</div>
+          </div>
 
-        <!-- Citations Card Component -->
-        <app-citations-card [citations]="citationsList()"></app-citations-card>
+          <div class="answer-content">
+            {{ currentAnswer()?.text }}
+          </div>
 
+          <div class="answer-footer">
+            <!-- Rating -->
+            <div class="rating-section">
+              <span>Rate this answer:</span>
+              @for (star of [1,2,3,4,5]; track star) {
+                <span 
+                  class="star" 
+                  (click)="setRating(star)"
+                  [style.color]="userRating() >= star ? '#facc15' : '#cbd5e1'">
+                  ★
+                </span>
+              }
+              @if (userRating() > 0) {
+                <span class="rating-value">({{ userRating() }}/5)</span>
+              }
+            </div>
+
+            <button class="copy-btn" (click)="copyAnswer()">
+              📋 {{ copySuccess() ? 'Copied!' : 'Copy' }}
+            </button>
+          </div>
+
+          <!-- Thank You Message -->
+          @if (showThankYouMessage()) {
+            <div class="thank-you-message">
+              ✅ Thank you for your feedback!
+            </div>
+          }
+
+          <!-- Feedback Form -->
+          @if (showFeedbackForm()) {
+            <div class="feedback-form">
+              <div class="feedback-header">
+                <strong>We're sorry if the answer wasn't helpful.</strong>
+                <p>Please tell us how we can improve:</p>
+              </div>
+              
+              <textarea 
+                [(ngModel)]="feedbackText" 
+                placeholder="What was missing or incorrect in the answer?"
+                class="feedback-textarea"
+                rows="4"></textarea>
+
+              <div class="feedback-actions">
+                <button class="btn-secondary" (click)="cancelFeedback()">Cancel</button>
+                <button 
+                  class="btn-primary" 
+                  (click)="submitFeedback()"
+                  [disabled]="!feedbackText().trim()">
+                  Submit Feedback
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Citations Card -->
+        <app-citations-card [citations]="currentAnswer()?.citations ?? []"></app-citations-card>
       </div>
 
-      <!-- Suggested Follow-ups + Next Actions Row -->
+      <!-- Next Actions -->
       <div class="bottom-row">
-        
-        <!-- Suggested Follow-ups Component -->
-        <app-followup-card 
-          [followups]="suggestedFollowUpsList()" 
-          (selected)="onFollowupSelected($event)">
-        </app-followup-card>
-
-        <!-- Next Actions Component -->
-        <app-next-actions-card [actions]="nextActionsList()"></app-next-actions-card>
-
+        <app-next-actions-card [actions]="currentAnswer()?.nextSteps ??[]"></app-next-actions-card>
       </div>
     </div>
   }

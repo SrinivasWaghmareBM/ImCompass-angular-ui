@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { StatCardComponent, StatCardData } from './stat-card';
+import { StatCardComponent} from './stat-card';
+import { StatCardData } from '../../models';
 
 describe('StatCardComponent', () => {
   let component: StatCardComponent;
@@ -17,8 +18,8 @@ describe('StatCardComponent', () => {
     const mockData: StatCardData = {
       label: 'Test Label',
       value: 100,
-      change: 'Test change',
-      changeType: 'success'
+      // change: 'Test change',
+      // changeType: 'success'
     };
     fixture.componentRef.setInput('data', mockData);
     fixture.detectChanges();

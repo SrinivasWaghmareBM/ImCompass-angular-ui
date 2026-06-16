@@ -1,12 +1,7 @@
 import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { StatCardData } from '../../models';
 
-export interface StatCardData {
-  label: string;
-  value: string | number;
-  change?: string;
-  changeType?: 'success' | 'warning' | 'danger' | 'info';
-}
 
 @Component({
   selector: 'app-stat-card',

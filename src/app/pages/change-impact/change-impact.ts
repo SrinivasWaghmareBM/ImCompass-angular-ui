@@ -2,11 +2,10 @@ import { Component, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PolicyCardComponent } from '../../shared/policy-card/policy-card';
 import { policies } from './change-impact-data';
-import { Policy } from '../../models';
 
 @Component({
   selector: 'app-change-impact',
-  imports: [CommonModule, PolicyCardComponent],
+  imports: [CommonModule],
   templateUrl: './change-impact.html',
   styleUrl: './change-impact.css'
 })

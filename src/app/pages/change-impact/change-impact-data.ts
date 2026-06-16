@@ -1,4 +1,4 @@
-import { Policy } from '../../models';
+import { Policy } from '../../models'
 
 export const policies: Policy[] = [
   {
@@ -7,7 +7,7 @@ export const policies: Policy[] = [
     version: 'v3.2',
     impact: 'High',
     description: 'Updated best execution requirements for fixed income and added crypto asset guidelines',
-    date: '2026-05-28',
+    date: new Date('2026-05-28'),
     affected: ['Trading Desk', 'Portfolio Management', 'Compliance'],
     changes: [
       { type: 'Added', description: 'Section 4.2: Crypto Asset Execution - New guidelines for cryptocurrency best execution' },
@@ -21,7 +21,7 @@ export const policies: Policy[] = [
     version: 'v2.8',
     impact: 'Medium',
     description: 'Integrated ESG considerations and climate-related shareholder proposals',
-    date: '2026-05-15',
+    date: new Date('2026-05-15'),
     affected: ['Portfolio Management', 'ESG Team', 'Operations'],
     changes: [
       { type: 'Added', description: 'Section 3.4: ESG Proposal Evaluation - Framework for assessing environmental and social shareholder proposals' },
@@ -35,7 +35,7 @@ export const policies: Policy[] = [
     version: 'v4.1',
     impact: 'High',
     description: 'Expanded pre-clearance requirements to cover all securities',
-    date: '2026-05-10',
+    date: new Date('2026-05-10'),
     affected: ['All Investment Staff', 'Compliance'],
     changes: [
       { type: 'Added', description: 'Section 1.5: Pre-clearance for Derivatives and Structured Products' },

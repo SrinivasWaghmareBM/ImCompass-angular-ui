@@ -4,9 +4,10 @@ import { Gap } from '../../models';
 
 @Component({
   selector: 'app-gap-list-item',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './gap-list-item.html',
-  styleUrl: './gap-list-item.css'
+  styleUrls: ['./gap-list-item.css']
 })
 export class GapListItemComponent {
   gap = input.required<Gap>();

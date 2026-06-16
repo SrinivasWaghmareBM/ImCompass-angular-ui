@@ -1,4 +1,4 @@
-<div class="quick-link-card" (click)="onClick()">
+<!-- <div class="quick-link-card" (click)="onClick()">
     <div class="quick-link-content">
       <div class="quick-link-icon">{{ data().icon }}</div>
       <div class="quick-link-text">
@@ -6,4 +6,24 @@
         <div class="quick-link-subtitle">{{ data().subtitle }}</div>
       </div>
     </div>
+    
+  Right Arrow 
+    <div class="quick-link-arrow">→</div>
   </div>
+ -->
+
+
+  <div class="quick-link-card" (click)="onClick()">
+    <!-- Top row: Icon (left) + Arrow (right) -->
+    <div class="quick-link-top">
+      <div class="quick-link-icon">{{ data().icon }}</div>
+      <div class="quick-link-arrow">→</div>
+    </div>
+  
+    <!-- Content below -->
+    <div class="quick-link-text">
+      <div class="quick-link-title">{{ data().title }}</div>
+      <div class="quick-link-subtitle">{{ data().subtitle }}</div>
+    </div>
+  </div>
+  

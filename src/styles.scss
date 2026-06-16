@@ -1,0 +1,118 @@
+@use '@angular/material' as mat;
+// Forward the responsive system so component SCSS files can import it via:
+//   @use 'styles/responsive' as r;
+// and use: @include r.respond-up('sm') { ... }  or  @include r.phone-only { ... }
+@forward 'styles/responsive';
+
+html {
+  height: 100%;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$azure-palette,    
+        tertiary: mat.$green-palette,   
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
+
+body {
+  color-scheme: light;
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+  margin: 0;
+  height: 100%;
+}
+
+// Theme CSS variables are defined in styles/theme.scss (loaded via angular.json)
+
+// ─── Inter (variable font) ────────────────────────────────────────────────────
+@font-face {
+  font-family: 'Inter';
+  src: url('/assets/fonts/inter/Inter-VariableFont_opsz,wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/assets/fonts/inter/Inter-Italic-VariableFont_opsz,wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+// ─── Source Sans 3 (variable font) ───────────────────────────────────────────
+@font-face {
+  font-family: 'Source Sans 3';
+  src: url('/assets/fonts/source_sans_3/SourceSans3-VariableFont_wght.ttf') format('truetype');
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Source Sans 3';
+  src: url('/assets/fonts/source_sans_3/SourceSans3-Italic-VariableFont_wght.ttf') format('truetype');
+  font-weight: 200 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+// ─── Apply fonts ──────────────────────────────────────────────────────────────
+// Inter for UI / headings, Source Sans 3 as the body reading font
+:root {
+  --font-ui: 'Inter', sans-serif;
+  --font-body: 'Source Sans 3', sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, h5, h6,
+.mat-mdc-card-title,
+.logo-title,
+button:not(.mat-icon-button) {
+  font-family: var(--font-ui);
+}
+
+// Ensure icon fonts always win over inherited font-family
+.material-icons,
+.material-icons-outlined,
+.material-icons-round,
+.material-icons-sharp {
+  font-family: 'Material Icons' !important;
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined' !important;
+}
+
+.mat-mdc-card-outlined {
+  border-width: 0 !important;
+}
+
+html.dark-theme {
+  color-scheme: dark;
+  @include mat.theme(
+    (
+      color: (
+        theme-type: dark,
+        primary: mat.$azure-palette,
+        tertiary: mat.$green-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+
+  // Invert the black BM logo to white in dark mode
+  .toolbar-logo {
+    filter: brightness(0) invert(1);
+  }
+}
