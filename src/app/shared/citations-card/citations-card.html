@@ -13,12 +13,13 @@
           </span>
         </div>
         <div class="citation-page-date">
-          <i class="fas fa-file"></i>
-          Page {{ citation.page }} 
+          <!-- <i class="fas fa-file"></i> -->
+          📋 Page {{ citation.page }} 
           @if (citation.date) {
             <span class="citation-date">• 
               <!-- add Calendar icon -->
-              <i class="fas fa-calendar-alt"></i>
+              <!-- <i class="fas fa-calendar-alt"></i> -->
+              📅 
               : {{ citation.date  | date:'dd MMM yyyy'  }}</span>
           }
         </div>

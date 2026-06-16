@@ -68,7 +68,7 @@
             </div>            
             <p class="policy-description">{{ policy.description }}</p>
             <div class="policy-meta">
-              <span>📅 {{ policy.date }}</span>
+              <span>📅 {{ policy.date  | date:'dd MMM yyyy'  }}</span>
               <span class="separator">•</span>
               <span>Affected: {{ policy.affected.join(', ') }}</span>
             </div>
