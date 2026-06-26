@@ -9,28 +9,6 @@ export const gapStats = {
 
 export const gaps: Gap[] = [
   {
-    id: 1,
-    title: 'Proxy Voting Policy - ESG Considerations',
-    domain: 'Operations',
-    severity: 'High',
-    status: 'Open',
-    description: 'Current proxy voting policy does not include guidelines for evaluating environmental, social, and governance (ESG) proposals. Policy focuses only on traditional shareholder value considerations.',
-    impact: 'Unable to meet client mandates requiring ESG integration. Reputational risk and potential loss of ESG-focused mandates.',
-    recommendation: 'Update proxy voting policy to include ESG evaluation framework. Add procedures for assessing climate-related and social proposals.',
-    date: new Date('2026-01-15')
-  },
-  {
-    id: 2,
-    title: 'Client Communication - Market Volatility Procedures',
-    domain: 'People',
-    severity: 'Medium',
-    status: 'In Review',
-    description: 'Missing detailed guidelines for communicating significant market movements to clients.',
-    impact: 'Inconsistent client communications during market volatility.',
-    recommendation: 'Develop standard operating procedures for market volatility communications.',
-    date: new Date('2026-01-15')
-  },
-  {
     id: 3,
     title: 'Conflicts of Interest - Personal Trading',
     domain: 'Risk & Compliance',
@@ -42,6 +20,17 @@ export const gaps: Gap[] = [
     date: new Date('2026-01-15')
   },
   {
+    id: 1,
+    title: 'Proxy Voting Policy - ESG Considerations',
+    domain: 'Operations',
+    severity: 'High',
+    status: 'Open',
+    description: 'Current proxy voting policy does not include guidelines for evaluating environmental, social, and governance (ESG) proposals. Policy focuses only on traditional shareholder value considerations.',
+    impact: 'Unable to meet client mandates requiring ESG integration. Reputational risk and potential loss of ESG-focused mandates.',
+    recommendation: 'Update proxy voting policy to include ESG evaluation framework. Add procedures for assessing climate-related and social proposals.',
+    date: new Date('2026-02-15')
+  },
+  {
     id: 4,
     title: 'Valuation Procedures - Level 3 Assets',
     domain: 'UKIM',
@@ -50,7 +39,18 @@ export const gaps: Gap[] = [
     description: 'Valuation policy provides limited guidance on frequency and methodology for reviewing Level 3 asset valuations.',
     impact: 'Inconsistent valuation practices across funds. Potential fair value concerns in auditor reviews.',
     recommendation: 'Add quarterly review requirements for Level 3 assets. Define valuation committee escalation procedures.',
-    date: new Date('2026-01-15')
+    date: new Date('2025-11-15')
+  },
+  {
+    id: 2,
+    title: 'Client Communication - Market Volatility Procedures',
+    domain: 'People',
+    severity: 'Medium',
+    status: 'In Review',
+    description: 'Missing detailed guidelines for communicating significant market movements to clients.',
+    impact: 'Inconsistent client communications during market volatility.',
+    recommendation: 'Develop standard operating procedures for market volatility communications.',
+    date: new Date('2025-01-15')
   }
 ];
 

@@ -27,7 +27,7 @@ export class GapAnalysisComponent {
 
   // Unique values for dropdowns
   severities = ['All', ...new Set(gaps.map(g => g.severity))];
-  statuses = ['All', ...new Set(gaps.map(g => g.status))];
+  statuses = ['All', ...new Set(gaps.map(g => g.status)), 'Blocked', 'Closed'];
   domains = ['All', ...new Set(gaps.map(g => g.domain))];
   dateOptions = ['Date Last Updated', 'Past 30 Days', 'Past 60 Days', 'Past 90 Days', 'Past Year'];
 

@@ -12,7 +12,7 @@
         type="text" 
         [value]="searchQuery()" 
         (input)="searchQuery.set($any($event.target).value)"
-        placeholder="Search changes..." 
+        placeholder="Search gaps..." 
         class="search-input">
     </div>
 
@@ -61,7 +61,7 @@
       }
 
       @if (filteredGaps().length === 0) {
-        <div class="no-results">No gaps found matching your criteria.</div>
+        <div class="no-results">No policy gaps match your selected filters.</div>
       }
     </div>
 
