@@ -1,16 +1,65 @@
 <div class="answer-card">
   <div class="answer-header">
     <div class="answer-label">Answer</div>
-    <div>Confidence: <span class="confidence-badge">{{ confidence() }}%</span></div>
+    <div class="confidence-badge">Confidence: {{ confidence() | percent}}</div>
   </div>
+
   <div class="answer-content">
     {{ answer() }}
   </div>
+
   <div class="answer-footer">
+    <!-- Rating -->
     <div class="rating-section">
-      Rate this answer: 
-      <span class="star">☆</span><span class="star">☆</span><span class="star">☆</span><span class="star">☆</span><span class="star">☆</span>
+      <span>Rate this answer:</span>
+      @for (star of [1,2,3,4,5]; track star) {
+        <span 
+          class="star" 
+          (click)="setRating(star)"
+          [style.color]="userRating() >= star ? '#facc15' : '#cbd5e1'">
+          <i class="fa-solid fa-star"></i>
+        </span>
+      }
+      @if (userRating() > 0) {
+        <span class="rating-value">({{ userRating() }}/5)</span>
+      }
     </div>
-    <button class="export-btn" (click)="onExport()">Export</button>
+
+    <button class="copy-btn" (click)="copyAnswer()">
+      📋 {{ copySuccess() ? 'Copied!' : 'Copy' }}
+    </button>
   </div>
+
+  <!-- Thank You Message -->
+  @if (showThankYouMessage()) {
+    <div class="thank-you-message">
+      ✅ Thank you for your feedback!
+    </div>
+  }
+
+  <!-- Feedback Form -->
+  @if (showFeedbackForm()) {
+    <div class="feedback-form">
+      <div class="feedback-header">
+        <strong>We're sorry the answer wasn't helpful.</strong>
+        <p>Please tell us how we can improve:</p>
+      </div>
+      
+      <textarea 
+        [(ngModel)]="feedbackText" 
+        placeholder="What was missing or incorrect in the answer?"
+        class="feedback-textarea"
+        rows="4"></textarea>
+
+      <div class="feedback-actions">
+        <button class="btn-secondary" (click)="cancelFeedback()">Cancel</button>
+        <button 
+          class="btn-primary" 
+          (click)="submitFeedback()"
+          [disabled]="!feedbackText().trim()">
+          Submit Feedback
+        </button>
+      </div>
+    </div>
+  }
 </div>

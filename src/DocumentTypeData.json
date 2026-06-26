@@ -1,0 +1,23 @@
+{
+  "functionName": "get_document_data_filters",
+  "invocationId": "a7617d01-e6f8-47b9-bb63-2f2162aa162c",
+  "status": "Succeeded",
+  "output": [
+    { "document_type": "Policies", "category": "Financial Crime" },
+    { "document_type": "Policies", "category": "People" },
+    { "document_type": "Policies", "category": "Marketing" },
+    { "document_type": "Policies", "category": "UKIM" },
+    { "document_type": "Policies", "category": "Compliance" },
+    { "document_type": "Procedures", "category": "Investment and Portfolio Management Procedures" },
+    { "document_type": "Policies", "category": "Risk" },
+    { "document_type": "Policies", "category": "Finance" },
+    { "document_type": "Procedures", "category": "Execution Only" },
+    { "document_type": "Policies", "category": "CASS Governance and Oversight" },
+    { "document_type": "Procedures", "category": "Portfolio Assistants Procedures" },
+    { "document_type": "Policies", "category": "CIO and Research" },
+    { "document_type": "Policies", "category": "Operations" },
+    { "document_type": "Procedures", "category": "Offshore Bonds Eligible Assets Guide" },
+    { "document_type": "Policies", "category": "Operational Investment Services" }
+  ],
+  "errors": []
+}

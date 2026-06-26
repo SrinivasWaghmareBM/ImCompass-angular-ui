@@ -11,42 +11,46 @@ export const gaps: Gap[] = [
   {
     id: 1,
     title: 'Proxy Voting Policy - ESG Considerations',
-    domain: 'Investment Operations',
+    domain: 'Operations',
     severity: 'High',
     status: 'Open',
     description: 'Current proxy voting policy does not include guidelines for evaluating environmental, social, and governance (ESG) proposals. Policy focuses only on traditional shareholder value considerations.',
     impact: 'Unable to meet client mandates requiring ESG integration. Reputational risk and potential loss of ESG-focused mandates.',
-    recommendation: 'Update proxy voting policy to include ESG evaluation framework. Add procedures for assessing climate-related and social proposals.'
+    recommendation: 'Update proxy voting policy to include ESG evaluation framework. Add procedures for assessing climate-related and social proposals.',
+    date: new Date('2026-01-15')
   },
   {
     id: 2,
     title: 'Client Communication - Market Volatility Procedures',
-    domain: 'Client Relations',
+    domain: 'People',
     severity: 'Medium',
     status: 'In Review',
     description: 'Missing detailed guidelines for communicating significant market movements to clients.',
     impact: 'Inconsistent client communications during market volatility.',
-    recommendation: 'Develop standard operating procedures for market volatility communications.'
+    recommendation: 'Develop standard operating procedures for market volatility communications.',
+    date: new Date('2026-01-15')
   },
   {
     id: 3,
     title: 'Conflicts of Interest - Personal Trading',
-    domain: 'Compliance',
+    domain: 'Risk & Compliance',
     severity: 'High',
     status: 'Open',
     description: 'Personal trading policy does not cover all new asset classes including crypto and private equity.',
     impact: 'Regulatory risk and potential conflicts of interest.',
-    recommendation: 'Expand personal trading policy to cover all asset classes.'
+    recommendation: 'Expand personal trading policy to cover all asset classes.',
+    date: new Date('2026-01-15')
   },
   {
     id: 4,
     title: 'Valuation Procedures - Level 3 Assets',
-    domain: 'Portfolio Valuation',
+    domain: 'UKIM',
     severity: 'Low',
     status: 'Open',
     description: 'Valuation policy provides limited guidance on frequency and methodology for reviewing Level 3 asset valuations.',
     impact: 'Inconsistent valuation practices across funds. Potential fair value concerns in auditor reviews.',
-    recommendation: 'Add quarterly review requirements for Level 3 assets. Define valuation committee escalation procedures.'
+    recommendation: 'Add quarterly review requirements for Level 3 assets. Define valuation committee escalation procedures.',
+    date: new Date('2026-01-15')
   }
 ];
 

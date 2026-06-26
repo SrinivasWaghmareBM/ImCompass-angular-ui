@@ -8,7 +8,9 @@
   }
   
   .gap-list-item:hover {
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+    border-color: #1e40af;
   }
   
   .gap-list-item.selected {

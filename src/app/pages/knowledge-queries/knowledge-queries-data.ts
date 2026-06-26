@@ -8,7 +8,10 @@ export const citations = [
 
 export const suggestedFollowUps = [
   'What actions should be taken if a portfolio is projected to go into overdraft?',
-  'What are the notification timelines for overdraft situations?'
+  'What are the notification timelines for overdraft situations?' ,
+  'Are there any exceptions to the overdraft policy for ISAs?',
+  'What penalties apply if overdrafts are not resolved immediately?',
+  'How should overdraft incidents be escalated to senior management?'
 ];
 
 export const nextActions = [
@@ -17,7 +20,7 @@ export const nextActions = [
 ];
 
 export const domainOptions = ['All Domains', 'HR', 'Compliance', 'Risk', 'Finance'];
-export const regionOptions = ['All Regions', 'Europe', 'Americas', 'Asia Pacific'];
-export const docTypeOptions = ['All Types', 'Policy', 'Procedure', 'Guideline'];
-export const updateFreqOptions = ['All Frequencies', 'Monthly', 'Quarterly', 'Annual'];
-export const dateRangeOptions = ['Last 30 days', 'Last 7 days', 'Last 90 days', 'Last Year'];
+//export const regionOptions = ['All Regions', 'Europe', 'Americas', 'Asia Pacific'];
+export const docTypeOptions = ['All Types', 'Policies', 'Procedures'];
+//export const updateFreqOptions = ['All Frequencies', 'Monthly', 'Quarterly', 'Annual'];
+export const dateRangeOptions = ['All Dates', 'Last 7 days', 'Last 30 days', 'Last 90 days', 'Last Year'];

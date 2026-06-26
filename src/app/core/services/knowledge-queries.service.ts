@@ -6,42 +6,59 @@ import { catchError, map } from 'rxjs/operators';
 import { QuestionRequest, Answer, AnswerFeedback } from '../../models';
 
 const MOCK_ANSWER: Answer = {
-  answerId: 'ans_' + Date.now(),
-  text: 'Clients must not go into overdraft for ISA or SIPPs payments...',
-  citations: [
+  "questionId": "q1",
+  "answerId": "a1",
+  "text": "There is no explicit guidance or procedure specifically titled 'drift management' for trade placement on client accounts in the currently indexed guidance documents. However, general requirements apply: any material deviation from policy or procedure (such as significant portfolio drift or trade deviation) must be formally approved by the relevant policy owner or committee. For example, the Best Execution Policy requires formal approval from the Chief Operating Officer for any material deviations. If you are managing portfolio drift as part of trade implementation and are unsure if your action constitutes a material deviation, you should seek approval from the policy owner or escalate to the relevant committee. For further clarity, contact the Investment Operations policy owner or Compliance.",
+  "citations": [
     {
-      type: 'POL',
-      title: 'overdrafts_policy.pdf',
-      page: 7,
-      date: new Date('01-01-2025'),
-      snippet: 'ISA and SIPPs accounts must maintain positive balances...',
-      sourceUrl: 'https://example.com/overdrafts_policy.pdf',
+      "type": "policy",
+      "title": "Best Execution Policy v7.pdf",
+      "page": 3,
+      "date": new Date('01-06-2025'),
+      "snippet": "\"Any material deviations from this policy must be formally approved by the Chief Operating Officer.\"",
+      "sourceUrl": "https://brooksmacdonaldgroup.sharepoint.com/:b:/r/sites/PolicyHub/Policies/008.%20Operational%20Investment%20Services/Best%20Execution%20Policy%20v7.pdf?csf=1&web=1&e=R1bDNY"
     },
     {
-      type: 'CAM',
-      title: 'Client_Account_Management.pdf',
-      page: 12,
-      date: new Date('01-03-2024'),
-      snippet: 'Portfolio managers must monitor account balances daily...',
-      sourceUrl: 'https://example.com/Client_Account_Management.pdf',
-    },
+      "type": "policy",
+      "title": "Trade Reporting Policy v4.2.pdf",
+      "page": 2,
+      "date": new Date('01-06-2025'),
+      "snippet": "\"Any material deviations from this policy must be formally approved by the Group Policy Committee.\"",
+      "sourceUrl": "https://brooksmacdonaldgroup.sharepoint.com/:b:/r/sites/PolicyHub/Policies/008.%20Operational%20Investment%20Services/Trade%20Reporting%20Policy%20v4.2.pdf?csf=1&web=1&e=SyZn2j"
+    }
   ],
-  nextSteps: [
-    { type: 'IMMEDIATE', title: 'Contact client', description: 'Call the client directly...' },
-    { type: 'WITHIN 24HRS', title: 'Log incident', description: 'Record all details...' },
-  ],
-  followUpSteps: [
+  "followUpSteps": [
     {
-      title: 'What actions should be taken if a portfolio is projected to go into overdraft?',
-      description: 'Guidance on steps to mitigate overdraft risks...',
+      "title": "NOTIFY",
+      "description": "Is my intended trade or portfolio adjustment considered a material deviation requiring approval?"
     },
     {
-      title: 'What are the notification timelines for overdraft situations?',
-      description: 'Details on when and how to notify stakeholders...',
-    },
+      "title": "FOLLOW-UP",
+      "description": "Who is the current policy owner for Investment Operations or the relevant committee for escalation?"
+    }
   ],
-  confidenceScore: 0.94,
-};
+  "nextSteps": [
+    {
+      "type": "IMMEDIATE",
+      "title": "Assess for Material Deviation",
+      "description": "Review your intended trade for any material deviation from policy or procedure (e.g., significant portfolio drift).",
+      "actions": [
+        "Compare the proposed trade against the relevant policy requirements.",
+        "Determine if the deviation is material (i.e., significant enough to impact client outcomes or policy compliance)."
+      ]
+    },
+    {
+      "type": "NOTIFY",
+      "title": "Seek Formal Approval if Deviation is Material",
+      "description": "If the deviation is material, escalate for formal approval to the Chief Operating Officer or relevant committee.",
+      "actions": [
+        "Document the nature and rationale for the deviation.",
+        "Submit the deviation for approval to the Chief Operating Officer or Group Policy Committee as required."
+      ]
+    }
+  ],
+  "confidenceScore": 0.7
+  }
 
 @Injectable({ providedIn: 'root' })
 export class KnowledgeQueriesService {

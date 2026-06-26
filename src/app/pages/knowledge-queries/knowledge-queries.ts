@@ -3,14 +3,21 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { KnowledgeQueriesService } from '../../core/services/knowledge-queries.service';
 import { QuestionRequest, Answer, AnswerFeedback } from '../../models';
-import { NextActionsCardComponent } from '../../shared/next-actions-card/next-actions-card'; 
-import { CitationsCardComponent } from '../../shared/citations-card/citations-card';
 import { AnswerCardComponent } from '../../shared/answer-card/answer-card';
+import { CitationsCardComponent } from '../../shared/citations-card/citations-card';
 import { FollowupCardComponent } from '../../shared/followup-card/followup-card';
+import { NextActionsCardComponent } from '../../shared/next-actions-card/next-actions-card';
 
 @Component({
   selector: 'app-knowledge-queries',
-  imports: [CommonModule, FormsModule, NextActionsCardComponent, CitationsCardComponent,  ],
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    AnswerCardComponent,
+    CitationsCardComponent,
+    FollowupCardComponent, 
+    NextActionsCardComponent
+  ],
   templateUrl: './knowledge-queries.html',
   styleUrl: './knowledge-queries.css'
 })
@@ -18,44 +25,68 @@ export class KnowledgeQueriesComponent {
   
   private knowledgeService = inject(KnowledgeQueriesService);
 
-  questionId = signal('');
   answerId = signal('');
   userId = signal('user_12345');
 
-  searchQuery = signal('');
+  // Current question tracking
+  currentQuestionId = signal('');
+
+  // Previous question context (shown above answer when using follow-ups)
+  previousQuestion = signal<{ questionId: string; text: string } | null>(null);
+
+  searchQuery = signal('Is there any guidance for drift management when placing trades on client account?');
+  selectedDocType = signal('all');
+  selectedDomain = signal('all');
+  selectedDateLastUpdated = signal('all');
   hasSearched = signal(false);
   confidenceScore = signal(0);
   searchResults = signal<any[]>([]);
   activeFilterDropdown = signal<string | null>(null);
-  userRating = signal<number>(0);
-  showFeedbackForm = signal(false);
-  feedbackText = signal('');
-  feedbackSubmitted = signal(false);
-  showThankYouMessage = signal(false);
   copySuccess = signal(false);
-
   currentAnswer = signal<Answer | null>(null);
+  
+  onDocTypeFilterChange(value: string){
+    this.selectedDocType.set(value);
+  }
 
-  // Updated to only 3 dropdowns
-  domainOptionsList = ['All Domains', 'HR', 'Compliance', 'Risk', 'Finance'];
-  docTypeOptionsList = ['All Types', 'Policy', 'Procedure', 'Guideline'];
-  dateLastUpdatedOptionsList = ['Last 30 days', 'Last 7 days', 'Last 90 days', 'Last Year'];
+  onDomainFilterChange(value: string) {
+    this.selectedDomain.set(value);
+  }
 
+  onDateLastUpdatedFilterChange(value: string){
+    this.selectedDateLastUpdated.set(value);
+}
+
+// Check if any filter is active
+hasActiveFilters(): boolean {
+  return this.searchQuery() !== '' ||
+         this.selectedDocType() !== 'all' ||
+         this.selectedDomain() !== 'all' ||
+         this.selectedDateLastUpdated() !== 'all' ;
+}
+
+  // Suggested Follow-ups + Next Actions
+  suggestedFollowUpsList = signal<string[]>([
+    'What are the notification timelines for overdraft situations?',
+    'Are there any exceptions to the overdraft policy for ISAs?',
+    'What penalties apply if overdrafts are not resolved immediately?',
+    'How should overdraft incidents be escalated to senior management?'
+  ]);
+
+  nextActionsList = signal<any[]>([
+    { type: 'IMMEDIATE', title: 'Contact client', description: 'Call the client directly to arrange repayment' },
+    { type: 'WITHIN 24HRS', title: 'Log incident', description: 'Record the overdraft in compliance system' },
+    { type: 'NOTIFY', title: 'Send report', description: 'Send compliance report to regulatory team' }
+  ]);
+ 
   selectedFilters = signal({
     domain: 'All Domains',
     docType: 'All Types',
-    dateLastUpdated: 'Last 30 days'
+    dateLastUpdated: 'Date Last Updated',
   });
 
   hasResults = computed(() => this.searchResults().length > 0);
-
-  hasActiveFilters = computed(() => {
-    const f = this.selectedFilters();
-    return f.domain !== 'All Domains' || 
-           f.docType !== 'All Types' || 
-           f.dateLastUpdated !== 'Last 30 days';
-  });
-
+ 
   @Output() ratingSubmitted = new EventEmitter<AnswerFeedback>();
 
   getFilterDisplayValue(filterType: string): string {
@@ -66,7 +97,7 @@ export class KnowledgeQueriesComponent {
       docType: 'Document Type',
       dateLastUpdated: 'Date Last Updated'
     };
-    if (value && !value.startsWith('All') && value !== 'Last 30 days') return value;
+    if (value && !value.startsWith('All') && value !== 'Date Last Updated') return value;
     return labels[filterType] || filterType;
   }
 
@@ -80,152 +111,86 @@ export class KnowledgeQueriesComponent {
     this.activeFilterDropdown.set(null);
   }
 
-  clearSingleFilter(type: any) {
-    const defaults: any = {
-      domain: 'All Domains',
-      docType: 'All Types',
-      dateLastUpdated: 'Last 30 days'
-    };
-    this.selectedFilters.set({ ...this.selectedFilters(), [type]: defaults[type] });
-  }
-
-  clearAllFilters() {
-    this.selectedFilters.set({
-      domain: 'All Domains',
-      docType: 'All Types',
-      dateLastUpdated: 'Last 30 days'
-    });
+  clearAllFilters() {    
+    this.searchQuery.set('');
+    this.selectedDocType.set('all');
+    this.selectedDomain.set('all');
+    this.selectedDateLastUpdated.set('all');
   }
 
   performSearch() {
     const query = this.searchQuery().trim();
     if (!query) return;
 
+    // Generate new questionId for every new search
+    const newQuestionId = 'q_' + Date.now();
+    this.currentQuestionId.set(newQuestionId);
+
     const filters = this.selectedFilters();
     const request: QuestionRequest = {
       userId: this.userId(),
-      // Generate a unique question ID (could be improved with a proper UUID generator)
-      questionId:  'q_' + Date.now(),
+      questionId: newQuestionId,
       text: query,
       domain: filters.domain !== 'All Domains' ? filters.domain : undefined,
-      docType: filters.docType !== 'All Types' ? filters.docType : undefined  
+      docType: filters.docType !== 'All Types' ? filters.docType : undefined,
+      dateLastUpdated: filters.dateLastUpdated !== 'Date Last Updated' ? filters.dateLastUpdated : undefined
     };
 
     this.knowledgeService.askQuestion(request).subscribe((answer: Answer) => {
-      this.questionId.set(request.questionId);
       this.currentAnswer.set(answer);
       this.answerId.set(answer.answerId);
       this.confidenceScore.set(answer.confidenceScore);
       this.hasSearched.set(true);
       this.searchResults.set([1]);
-      this.userRating.set(0);
-      this.showFeedbackForm.set(false);
-      this.feedbackSubmitted.set(false);
-      this.feedbackText.set('');
-      this.showThankYouMessage.set(false);
       this.copySuccess.set(false);
     });
+  }
+
+  // Handle rating + feedback from AnswerCardComponent
+  onRatingSubmitted(feedback: { rating: number; feedback?: string }) {
+    const ratingFeedback: AnswerFeedback = {
+      questionId: this.currentQuestionId(),
+      answerId: this.answerId(),
+      userId: this.userId(),
+      rating: feedback.rating,
+      feedback: feedback.feedback,
+      timestamp: new Date()
+    };
+
+    this.ratingSubmitted.emit(ratingFeedback);
+    console.log('Rating submitted from AnswerCard:', ratingFeedback);
   }
 
   // Copy answer to clipboard
   async copyAnswer() {
     const answerText = this.currentAnswer()?.text || '';
     if (!answerText) return;
-  
-    // Try modern Clipboard API first
-    if (navigator.clipboard && window.isSecureContext) {
-      try {
-        await navigator.clipboard.writeText(answerText);
-        this.showCopySuccess();
-        return;
-      } catch (err) {
-        console.error('Clipboard API failed:', err);
-      }
-    }
-  
-    // Fallback for older browsers or non-secure contexts
-    this.fallbackCopy(answerText);
-  }
-  
-  private showCopySuccess() {
-    this.copySuccess.set(true);
-    setTimeout(() => this.copySuccess.set(false), 2000);
-  }
-  
-  private fallbackCopy(text: string) {
-    const textArea = document.createElement('textarea');
-    textArea.value = text;
-    textArea.style.position = 'fixed';
-    textArea.style.left = '-9999px';
-    textArea.style.top = '-9999px';
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-  
+
     try {
-      const successful = document.execCommand('copy');
-      if (successful) {
-        this.showCopySuccess();
-      }
+      await navigator.clipboard.writeText(answerText);
+      this.copySuccess.set(true);
+      setTimeout(() => this.copySuccess.set(false), 2000);
     } catch (err) {
-      console.error('Fallback copy failed:', err);
+      console.error('Failed to copy answer:', err);
     }
-  
-    document.body.removeChild(textArea);
   }
 
-  setRating(rating: number) {
-    this.userRating.set(rating);
-    this.showThankYouMessage.set(true);
-
-    const feedback: AnswerFeedback = {
-      questionId: this.questionId(),
-      answerId: this.answerId(),
-      userId: this.userId(),
-      rating,
-      timestamp: new Date()
-    };
-
-    this.ratingSubmitted.emit(feedback);
-    
-    // Show feedback form only if rating is less than 3
-    if (rating < 3) {
-      this.showFeedbackForm.set(true);
-      this.feedbackSubmitted.set(false);
-    } else {
-      this.showFeedbackForm.set(false);
+  // Handle follow-up selection from FollowupCardComponent
+  onFollowupSelected(followup: string) {
+    // Save current question + questionId as previous context
+    if (this.searchQuery().trim() && this.currentQuestionId()) {
+      this.previousQuestion.set({
+        questionId: this.currentQuestionId(),
+        text: this.searchQuery()
+      });
     }
 
-    setTimeout(() => this.showThankYouMessage.set(false), 4000);
-  }
+    // Generate a new questionId for the follow-up
+    const newQuestionId = 'q_' + Date.now();
+    this.currentQuestionId.set(newQuestionId);
 
-  submitFeedback() {
-    if (!this.feedbackText().trim()) return;
-
-    const feedback: AnswerFeedback = {
-      questionId: this.questionId(),
-      answerId: this.answerId(),
-      userId: this.userId(),
-      rating: this.userRating(),
-      feedback: this.feedbackText().trim(),
-      timestamp: new Date()
-    };
-
-    this.ratingSubmitted.emit(feedback);
-    this.feedbackSubmitted.set(true);
-    this.showFeedbackForm.set(false);
-    this.showThankYouMessage.set(true);
-
-    setTimeout(() => {
-      this.feedbackSubmitted.set(false);
-      this.feedbackText.set('');
-      this.showThankYouMessage.set(false);
-    }, 3000);
-  }
-
-
-  cancelFeedback() {
-    this.showFeedbackForm.set(false);
-    this.feedbackText.set('');
+    // Set the follow-up as the new search query
+    this.searchQuery.set(followup);
+    this.performSearch();
   }
 }

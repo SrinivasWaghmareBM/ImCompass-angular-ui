@@ -1,118 +1,73 @@
 <div class="change-impact-page">
+  <!-- Header -->
   <div class="page-header">
-    <h2 class="page-heading">Change Impact</h2>
+    <h1 class="page-heading">Change Impact</h1>
     <p class="page-subtitle">Review recent policy and procedure updates with highlighted changes</p>
   </div>
 
-  <!-- Filter Bar -->
-  <div class="filter-bar">
-    <div class="filter-label">Filter by:</div>
-    
-    <!-- Time Period Dropdown -->
-    <div class="filter-dropdown">
-      <button class="filter-btn" (click)="toggleDropdown('time')">
-        {{ selectedTimePeriod() }} ▼
-      </button>
-      @if (activeDropdown() === 'time') {
-        <div class="dropdown-menu">
-          @for (option of timePeriodOptions; track option) {
-            <div class="dropdown-item" (click)="selectTimePeriod(option)">{{ option }}</div>
-          }
-        </div>
-      }
+  <!-- Search + Filters -->
+  <div class="search-filter-bar">
+    <div class="search-input-wrapper">
+      <input 
+        type="text" 
+        [value]="searchQuery()" 
+        (input)="searchQuery.set($any($event.target).value); onSearchChange()"
+        placeholder="Search changes..." 
+        class="search-input">
     </div>
 
-    <!-- Impact Level Dropdown -->
-    <div class="filter-dropdown">
-      <button class="filter-btn" (click)="toggleDropdown('impact')">
-        {{ selectedImpactLevel() }} ▼
-      </button>
-      @if (activeDropdown() === 'impact') {
-        <div class="dropdown-menu">
-          @for (option of impactLevelOptions; track option) {
-            <div class="dropdown-item" (click)="selectImpactLevel(option)">{{ option }}</div>
-          }
-        </div>
-      }
-    </div>
+    <div class="filters">
 
-    <!-- Area Dropdown -->
-    <div class="filter-dropdown">
-      <button class="filter-btn" (click)="toggleDropdown('area')">
-        {{ selectedArea() }} ▼
+      <select 
+        [value]="selectedDomainFilter()" 
+        (change)="onDomainFilterChange($any($event.target).value)"
+        class="filter-select">
+        <option value="All">All Domains</option>
+        <option value="Risk">Risk & Compliance</option>
+        <option value="Operations">Operations</option>
+        <option value="UKIM">UKIM</option>
+        <option value="People">People</option>
+      </select>
+      
+      <select 
+        [value]="selectedTimeFilter()" 
+        (change)="onTimeFilterChange($any($event.target).value)"
+        class="filter-select">
+        <option value="all">Date Last Updated</option>
+        <option value="30">Past 30 Days</option>
+        <option value="60">Past 60 Days</option>
+        <option value="90">Past 90 Days</option>
+        <option value="365">Past year</option>
+      </select>
+
+      <!-- Clear Filters Button -->
+      <button 
+        class="clear-filters-btn"
+        (click)="clearFilters()"
+        [disabled]="!hasActiveFilters()">
+        Clear Filters
       </button>
-      @if (activeDropdown() === 'area') {
-        <div class="dropdown-menu">
-          @for (option of areaOptions; track option) {
-            <div class="dropdown-item" (click)="selectArea(option)">{{ option }}</div>
-          }
-        </div>
-      }
     </div>
   </div>
 
   <!-- Policy Cards -->
-  <div class="policies-list">
+  <div class="policy-list">
     @for (policy of filteredPolicies(); track policy.id) {
-      <div class="policy-card" [class.expanded]="isPolicyExpanded(policy.id)">
-        <!-- Card Header -->
-        <div class="policy-header" (click)="togglePolicy(policy.id)">
-          <div class="policy-header-left">
-            <div class="policy-title-row">
-              <h3 class="policy-title">{{ policy.title }} {{ policy.version }}</h3>
-              <span [class]="getImpactClass(policy.impact)" class="impact-badge">
-                @if (policy.impact === 'High') { 🔴 }
-                @if (policy.impact === 'Medium') { 🟠 }
-                {{ policy.impact }} Impact
-              </span>
-            </div>            
-            <p class="policy-description">{{ policy.description }}</p>
-            <div class="policy-meta">
-              <span>📅 {{ policy.date  | date:'dd MMM yyyy'  }}</span>
-              <span class="separator">•</span>
-              <span>Affected: {{ policy.affected.join(', ') }}</span>
-            </div>
-          </div>
-          <span class="expand-icon">{{ isPolicyExpanded(policy.id) ? '⌄' : '›' }}</span>
-        </div>
+      <app-policy-card
+        [policy]="policy"
+        [isExpanded]="isExpanded(policy.id)"
+        [attestedAt]="getAttestedAt(policy.id)"
+        (toggle)="togglePolicy(policy.id)"
+        (viewFullPolicy)="onViewFullPolicy($event)"
+        (downloadSummary)="onDownloadSummary($event)"
+        (attest)="onAttest($event)">
+      </app-policy-card>
+    }
 
-        <!-- Expanded Content -->
-        @if (isPolicyExpanded(policy.id)) {
-          <div class="policy-expanded-content">
-
-            @if (policy.changes && policy.changes.length > 0) {
-              <div class="changes-section">
-                <div class="changes-title">Policy Changes</div>
-                <div class="changes-list">
-                  @for (change of policy.changes; track change.type + change.description) {
-                    <div class="change-item" [ngClass]="getChangeClass(change.type)">
-                      <span class="change-badge" [class.added]="change.type === 'Added'" 
-                            [class.modified]="change.type === 'Modified'"
-                            [class.removed]="change.type === 'Removed'">{{ change.type }}</span>
-                      <span class="change-description">{{ change.description }}</span>
-                    </div>
-                  }
-                </div>
-              </div>
-            }
-
-            <div class="policy-actions">
-              <button class="btn btn-primary">View Full Policy</button>
-              <button class="btn btn-secondary">Download Summary</button>
-              <button class="btn btn-secondary">Mark as Reviewed</button>
-            </div>
-          </div>
-        }
+    @if (filteredPolicies().length === 0) {
+      <div class="no-results">
+        No policy changes found matching your criteria.
       </div>
     }
   </div>
-
-  <!-- No Results -->
-  @if (filteredPolicies().length === 0) {
-    <div class="no-results">
-      <div class="no-results-icon">📋</div>
-      <div class="no-results-text">No policies match the selected filters</div>
-      <button class="btn btn-secondary" (click)="clearAllFilters()">Clear Filters</button>
-    </div>
-  }
 </div>

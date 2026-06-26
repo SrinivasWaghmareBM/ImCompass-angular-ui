@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { StatCardData, QuickLinkData } from '../../models';
 import { StatCardComponent } from '../../shared/stat-card/stat-card';
-import {  QuickLinkCardComponent} from '../../shared/quick-link-card/quick-link-card';
+import { QuickLinkCardComponent} from '../../shared/quick-link-card/quick-link-card';
 import { recentActivity } from './dashboard-data';
 
 @Component({

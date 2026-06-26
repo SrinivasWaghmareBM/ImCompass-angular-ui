@@ -6,8 +6,6 @@
 
   <!-- Search Section -->
   <div class="search-section">
-
-    <!-- Search Input + Button -->
     <div class="search-input-row">
       <div class="search-input-wrapper">
         <input 
@@ -18,89 +16,60 @@
           placeholder="What is the answer you're looking for?" 
           class="search-input">
       </div>
-      <button (click)="performSearch()" class="search-btn">🔍 Search</button>
+      <button (click)="performSearch()" class="search-btn"> <i class="nav-icon fa-brands fa-searchengin"></i>  Search</button>
     </div>
 
-    <!-- Filters - Only 3 dropdowns -->
-    <div class="filters-row">
+    <!-- Search + Filters -->
+  <div class="search-filter-bar">
+    <div class="filters">
+      <select 
+        [value]="selectedDocType()" 
+        (change)="onDocTypeFilterChange($any($event.target).value)"
+        class="filter-select">
+        <option value="all">All Types</option>
+        <option value="Policies">Policies</option>
+        <option value="Procedures">Procedures</option>
+      </select>
       
-      <!-- Domain -->
-      <div class="filter-dropdown">
-        <button class="filter-btn" (click)="toggleFilterDropdown('domain')">
-          {{ getFilterDisplayValue('domain') }} ▼
-        </button>
-        @if (activeFilterDropdown() === 'domain') {
-          <div class="filter-menu">
-            @for (option of domainOptionsList; track option) {
-              <div class="filter-option" (click)="selectFilterOption('domain', option)">{{ option }}</div>
-            }
-          </div>
-        }
-      </div>
+      <select 
+      [value]="selectedDomain()" 
+      (change)="onDomainFilterChange($any($event.target).value)"
+        class="filter-select">
+        <option value="all">All Domains</option>
+        <option value="Risk">Risk & Compliance</option>
+        <option value="Operations">Operations</option>
+        <option value="UKIM">UKIM</option>
+        <option value="People">People</option>
+      </select>
 
-      <!-- Document Type -->
-      <div class="filter-dropdown">
-        <button class="filter-btn" (click)="toggleFilterDropdown('docType')">
-          {{ getFilterDisplayValue('docType') }} ▼
-        </button>
-        @if (activeFilterDropdown() === 'docType') {
-          <div class="filter-menu">
-            @for (option of docTypeOptionsList; track option) {
-              <div class="filter-option" (click)="selectFilterOption('docType', option)">{{ option }}</div>
-            }
-          </div>
-        }
-      </div>
+      
+      <select 
+      [value]="selectedDateLastUpdated()" 
+      (change)="onDateLastUpdatedFilterChange($any($event.target).value)"
+        class="filter-select">
+        <option value="all">Date Last Updated</option>
+        <option value="30">Past 30 Days</option>
+        <option value="60">Past 60 Days</option>
+        <option value="90">Past 90 Days</option>
+        <option value="365">Past year</option>
+      </select>
 
-      <!-- Date Last Updated -->
-      <div class="filter-dropdown">
-        <button class="filter-btn" (click)="toggleFilterDropdown('dateLastUpdated')">
-          {{ getFilterDisplayValue('dateLastUpdated') }} ▼
-        </button>
-        @if (activeFilterDropdown() === 'dateLastUpdated') {
-          <div class="filter-menu">
-            @for (option of dateLastUpdatedOptionsList; track option) {
-              <div class="filter-option" (click)="selectFilterOption('dateLastUpdated', option)">{{ option }}</div>
-            }
-          </div>
-        }
-      </div>
-
-      <button class="apply-btn">Apply</button>
+      <!-- Clear Filters Button -->
+      <button 
+        class="clear-filters-btn"
+        (click)="clearAllFilters()"
+        [disabled]="!hasActiveFilters()">
+        Clear Filters
+      </button>
     </div>
+  </div>
 
-    <!-- Selected Filters -->
-    @if (hasActiveFilters()) {
-      <div class="selected-filters-row">
-        <div class="selected-filters-list">
-          @if (selectedFilters().domain !== 'All Domains') {
-            <span class="filter-chip">
-              {{ selectedFilters().domain }}
-              <button class="chip-remove" (click)="clearSingleFilter('domain')">✕</button>
-            </span>
-          }
-          @if (selectedFilters().docType !== 'All Types') {
-            <span class="filter-chip">
-              {{ selectedFilters().docType }}
-              <button class="chip-remove" (click)="clearSingleFilter('docType')">✕</button>
-            </span>
-          }
-          @if (selectedFilters().dateLastUpdated !== 'Last 30 days') {
-            <span class="filter-chip">
-              {{ selectedFilters().dateLastUpdated }}
-              <button class="chip-remove" (click)="clearSingleFilter('dateLastUpdated')">✕</button>
-            </span>
-          }
-        </div>
-        <button class="clear-all-link" (click)="clearAllFilters()">✕ Clear all</button>
-      </div>
-    }
   </div>
 
   <!-- Empty State -->
   @if (!hasSearched()) {
     <div class="empty-state">
-      <div class="empty-icon">🔍</div>
+      <div class="empty-icon"> <i class="nav-icon fa-brands fa-searchengin"></i></div>
       <div class="empty-title">No query entered</div>
       <div class="empty-subtitle">Enter a question above to search policies and procedures</div>
     </div>
@@ -113,80 +82,26 @@
       <!-- Answer + Citations -->
       <div class="top-row">
         
-        <!-- Answer Card -->
-        <div class="answer-card">
-          <div class="answer-header">
-            <div class="answer-label">Answer</div>
-            <div class="confidence-badge">Confidence: {{ confidenceScore() | percent: '1.0-2' }}</div>
-          </div>
-
-          <div class="answer-content">
-            {{ currentAnswer()?.text }}
-          </div>
-
-          <div class="answer-footer">
-            <!-- Rating -->
-            <div class="rating-section">
-              <span>Rate this answer:</span>
-              @for (star of [1,2,3,4,5]; track star) {
-                <span 
-                  class="star" 
-                  (click)="setRating(star)"
-                  [style.color]="userRating() >= star ? '#facc15' : '#cbd5e1'">
-                  ★
-                </span>
-              }
-              @if (userRating() > 0) {
-                <span class="rating-value">({{ userRating() }}/5)</span>
-              }
-            </div>
-
-            <button class="copy-btn" (click)="copyAnswer()">
-              📋 {{ copySuccess() ? 'Copied!' : 'Copy' }}
-            </button>
-          </div>
-
-          <!-- Thank You Message -->
-          @if (showThankYouMessage()) {
-            <div class="thank-you-message">
-              ✅ Thank you for your feedback!
-            </div>
-          }
-
-          <!-- Feedback Form -->
-          @if (showFeedbackForm()) {
-            <div class="feedback-form">
-              <div class="feedback-header">
-                <strong>We're sorry if the answer wasn't helpful.</strong>
-                <p>Please tell us how we can improve:</p>
-              </div>
-              
-              <textarea 
-                [(ngModel)]="feedbackText" 
-                placeholder="What was missing or incorrect in the answer?"
-                class="feedback-textarea"
-                rows="4"></textarea>
-
-              <div class="feedback-actions">
-                <button class="btn-secondary" (click)="cancelFeedback()">Cancel</button>
-                <button 
-                  class="btn-primary" 
-                  (click)="submitFeedback()"
-                  [disabled]="!feedbackText().trim()">
-                  Submit Feedback
-                </button>
-              </div>
-            </div>
-          }
-        </div>
+        <!-- Smart Answer Card (with rating + feedback) -->
+        <app-answer-card 
+          [answer]="currentAnswer()?.text || ''" 
+          [confidence]="confidenceScore()"
+          (ratingSubmitted)="onRatingSubmitted($event)"
+          (copyClicked)="copyAnswer()">
+        </app-answer-card>
 
         <!-- Citations Card -->
         <app-citations-card [citations]="currentAnswer()?.citations ?? []"></app-citations-card>
       </div>
 
-      <!-- Next Actions -->
+      <!-- Suggested Follow-ups + Next Actions -->
       <div class="bottom-row">
-        <app-next-actions-card [actions]="currentAnswer()?.nextSteps ??[]"></app-next-actions-card>
+        <app-followup-card 
+          [followups]="suggestedFollowUpsList()" 
+          (selected)="onFollowupSelected($event)">
+        </app-followup-card>
+
+        <app-next-actions-card [actions]="currentAnswer()?.nextSteps ?? []"></app-next-actions-card>
       </div>
     </div>
   }

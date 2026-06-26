@@ -1,118 +1,114 @@
 <div class="gap-analysis-page">
   <!-- Header -->
   <div class="page-header">
-    <h2 class="page-heading">Gap Analysis</h2>
+    <h1 class="page-heading">Policy & Procedure Gaps</h1>
     <p class="page-subtitle">Identified gaps in policies and procedures with recommended next steps</p>
   </div>
 
-  <!-- Stats Cards -->
-  <div class="stats-row">
-    <div class="stat-box">
-      <div class="stat-label">Total Gaps</div>
-      <div class="stat-value">{{ gapStats.total }}</div>
+  <!-- Search + Filters -->
+  <div class="search-filter-bar">
+    <div class="search-input-wrapper">
+      <input 
+        type="text" 
+        [value]="searchQuery()" 
+        (input)="searchQuery.set($any($event.target).value)"
+        placeholder="Search changes..." 
+        class="search-input">
     </div>
-    <div class="stat-box">
-      <div class="stat-label">High Severity</div>
-      <div class="stat-value">{{ gapStats.high }}</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-label">In Review</div>
-      <div class="stat-value">{{ gapStats.inReview }}</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-label">Resolved</div>
-      <div class="stat-value">{{ gapStats.resolved }}</div>
-    </div>
-  </div>
 
-  <!-- Filter Tabs -->
-  <div class="filter-tabs-row">
-    <div class="filter-tabs">
-      <button class="filter-tab" [class.active]="activeFilter() === 'all'" (click)="setFilter('all')">All Gaps</button>
-      <button class="filter-tab" [class.active]="activeFilter() === 'high'" (click)="setFilter('high')">High Severity</button>
-      <button class="filter-tab" [class.active]="activeFilter() === 'open'" (click)="setFilter('open')">Open</button>
-      <button class="filter-tab" [class.active]="activeFilter() === 'in-review'" (click)="setFilter('in-review')">In Review</button>
+    <div class="filters">
+      <select [value]="selectedSeverity()" (change)="selectedSeverity.set($any($event.target).value)" class="filter-select">
+        @for (sev of severities; track sev) {
+          <option [value]="sev">{{ sev === 'All' ? 'All Severities' : sev }}</option>
+        }
+      </select>
+
+      <select [value]="selectedStatus()" (change)="selectedStatus.set($any($event.target).value)" class="filter-select">
+        @for (stat of statuses; track stat) {
+          <option [value]="stat">{{ stat === 'All' ? 'All Statuses' : stat }}</option>
+        }
+      </select>
+
+      <select [value]="selectedDomain()" (change)="selectedDomain.set($any($event.target).value)" class="filter-select">
+        @for (dom of domains; track dom) {
+          <option [value]="dom">{{ dom === 'All' ? 'All Domains' : dom }}</option>
+        }
+      </select>
+
+      <select [value]="selectedDateFilter()" (change)="selectedDateFilter.set($any($event.target).value)" class="filter-select">
+        @for (opt of dateOptions; track opt) {
+          <option [value]="opt">{{ opt === 'Any' ? 'Date Identified: Any' : opt }}</option>
+        }
+      </select>
+
+      <button class="clear-filters-btn" (click)="clearFilters()" [disabled]="!hasActiveFilters()">
+        Clear Filters
+      </button>
     </div>
-    <button class="export-btn">Export Report</button>
   </div>
 
   <!-- Main Content -->
-  <div class="gap-content">
-    <!-- Left: Policy & Procedure Gaps -->
-    <div class="gap-list-section">
-      <div class="section-header">Policy & Procedure Gaps</div>
-      <div class="gap-list">
-        @for (gap of filteredGaps(); track gap.id) {
-          <div class="gap-list-item" 
-               (click)="selectGap(gap)"
-               [class.selected]="selectedGap()?.id === gap.id">
-            <div class="gap-item-header">
-              <span [class]="getSeverityClass(gap.severity)" class="severity-badge">{{ gap.severity }}</span>
-              <span class="status-badge" [class]="getStatusClass(gap.status)">{{ gap.status }}</span>
-            </div>
-            <div class="gap-item-title">{{ gap.title }}</div>
-            <div class="gap-item-domain">{{ gap.domain }}</div>
-          </div>
-        }
-      </div>
+  <div class="main-content">
+    
+    <!-- Left: Gap List -->
+    <div class="gap-list">
+      @for (gap of filteredGaps(); track gap.id) {
+        <app-gap-list-item
+          [gap]="gap"
+          [selected]="selectedGap()?.id === gap.id"
+          (clicked)="selectGap($event)">
+        </app-gap-list-item>
+      }
+
+      @if (filteredGaps().length === 0) {
+        <div class="no-results">No gaps found matching your criteria.</div>
+      }
     </div>
 
-    <!-- Right: Gap Detail -->
+    <!-- Right: Detail Panel -->
     @if (selectedGap()) {
-      <div class="gap-detail-section">
-        <div class="gap-detail-header">
-          <div class="gap-detail-title-row">
-            <h3 class="gap-detail-title">{{ selectedGap()!.title }}</h3>
-            <div class="gap-detail-actions">
-              <span [class]="getSeverityClass(selectedGap()!.severity)" class="severity-badge large">{{ selectedGap()!.severity }}</span>
-              <button class="close-btn" (click)="closeDetail()">✕ Close</button>
+      <div class="gap-detail">
+        <div class="detail-header">
+          <div>
+            <h2 class="detail-title">{{ selectedGap()?.title }}</h2>
+            <div class="detail-meta">
+            <span [class]="getSeverityClass(selectedGap()!.severity)" class="severity-badge">
+              {{ selectedGap()?.severity }}
+            </span>
+               Domain: {{ selectedGap()?.domain }} &nbsp;•&nbsp; Status: {{ selectedGap()?.status }}
             </div>
           </div>
-          <div class="gap-detail-meta">
-            <span>Domain: {{ selectedGap()!.domain }}</span>
-            <span class="separator">•</span>
-            <span>Status: {{ selectedGap()!.status }}</span>
+          <div class="detail-actions">
+            <button class="close-btn" (click)="closeDetail()">✕ Close</button>
           </div>
         </div>
 
         <div class="detail-section">
-          <div class="detail-label">
-            <span class="detail-icon">ℹ️</span>
-            Description
-          </div>
-          <div class="detail-text detail-text-bordered">{{ selectedGap()!.description }}</div>
+          <div class="section-title"><i class="fa-solid fa-circle-info"></i> Description</div> 
+          <div class="section-details">
+            <p>{{ selectedGap()?.recommendation }}</p> 
+          </div> 
         </div>
 
         <div class="detail-section">
-          <div class="detail-label">
-            <span class="detail-icon">ℹ️</span>
-            Impact
-          </div>
-          <div class="detail-text detail-text-bordered">{{ selectedGap()!.impact }}</div>
+          <div class="section-title"><i class="fa-solid fa-explosion"></i> Impact</div> 
+          <div class="section-details">
+            <p>{{ selectedGap()?.impact }}</p> 
+          </div> 
         </div>
 
         <div class="detail-section">
-          <div class="detail-label">
-            <span class="detail-icon">✅</span>
-            Recommendation
+          <div class="section-title"><i class="fa-solid fa-thumbs-up"></i> Recommendation</div>
+          <div class="section-details">
+            <p>{{ selectedGap()?.recommendation }}</p> 
           </div>
-          <div class="detail-text detail-text-bordered">{{ selectedGap()!.recommendation }}</div>
         </div>
 
-        <div class="gap-actions">
-          <button class="btn btn-primary">Assign Owner</button>
-          <button class="btn btn-secondary">Update Status</button>
-          <button class="btn btn-secondary">Export</button>
-        </div>
-      </div>
-    } @else {
-      <div class="gap-detail-placeholder">
-        <div class="placeholder-content">
-          <div class="placeholder-icon">📋</div>
-          <div class="placeholder-text">Select a gap from the list to view details</div>
+        
+        <div class="detail-buttons">
+          <button class="btn-secondary" (click)="exportGap()">Export</button>
         </div>
       </div>
     }
   </div>
-
 </div>

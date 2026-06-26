@@ -1,112 +1,169 @@
 .sidebar {
-    width: 260px;
-    background-color: #071127;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    flex-shrink: 0;
-    box-shadow: inset -1px 0 0 rgba(255,255,255,0.02);
-  }
-  
-  .sidebar-header {
-    padding: 20px;
-    border-bottom: 1px solid #334155;
-  }
-  
-  .logo-container {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  
-  .logo {
-    width: 36px;
-    height: 36px;
-    background-color: #2563eb;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 20px;
-  }
-  
-  .brand-name {
-    font-weight: 600;
-    font-size: 18px;
-  }
-  
-  .brand-subtitle {
-    font-size: 11px;
-    color: #94a3b8;
-  }
-  
-  .sidebar-nav {
-    flex: 1;
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  
-  .nav-icon {
-    margin-right: 8px;
-    font-size: 28px;
-  }
+  width: 260px;
+  background: #0f172a;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  transition: width 0.3s ease;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100;
+}
 
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px 16px;
-    border-radius: 8px;
-    color: #cbd5e1;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    font-size: 14px;
-  }
-  
-  .nav-item:hover {
-    background-color: #243142;
-    color: white;
-  }
-  
-  .nav-item.active {
-      background-color: #2563eb;
-      color: white;
-      box-shadow: 0 2px 10px rgba(37,99,235,0.08);
-    }
-  
-  .sidebar-footer {
-    padding: 16px;
-    border-top: 1px solid #334155;
-  }
-  
-  .user-profile {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  
-  .user-avatar {
-    width: 32px;
-    height: 32px;
-    background-color: #2563eb;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    font-size: 12px;
-  }
-  
-  .user-name {
-    font-weight: 500;
-    font-size: 14px;
-  }
-  
-  .user-role {
-    font-size: 12px;
-    color: #94a3b8;
-  }
+.sidebar.collapsed {
+  width: 72px;
+}
+
+/* Header */
+.sidebar-header {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #1e2937;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  width: 42px;
+  height: 42px;
+ 
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.logo-text {
+  line-height: 1.2;
+}
+
+.brand-name {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.brand-subtitle {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.collapse-btn {
+  background: #516f99;
+  border: none;
+  color: #c0d0e6;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.collapse-btn:hover {
+  background: #334155;
+  color: white;
+}
+
+/* Navigation */
+.sidebar-nav {
+  flex: 1;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  color: #cbd5e1;
+  text-decoration: none;
+  border-radius: 10px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+  background: #1e2937;
+  color: white;
+}
+
+.nav-item.active {
+  background: #2563eb;
+  color: white;
+}
+
+.nav-icon {
+  font-size: 28px;
+  width: 28px;
+  text-align: left;
+}
+
+/* Footer */
+.sidebar-footer {
+  padding: 16px;
+  border-top: 1px solid #1e2937;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  background: #334155;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.user-details {
+  line-height: 1.3;
+}
+
+.user-name {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.user-role {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+/* Collapsed State */
+.sidebar.collapsed .logo-text,
+.sidebar.collapsed .nav-item span:not(.nav-icon),
+.sidebar.collapsed .user-details {
+  display: none;
+}
+
+.sidebar.collapsed .nav-item {
+  justify-content: center;
+  padding: 12px;
+}
+
+.sidebar.collapsed .user-profile {
+  justify-content: center;
+}

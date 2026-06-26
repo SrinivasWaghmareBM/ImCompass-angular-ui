@@ -1,36 +1,51 @@
-<div class="sidebar">
+
+  <div class="sidebar" [class.collapsed]="collapsed()">
     <div class="sidebar-header">
       <div class="logo-container">
-        <!-- <div class="logo">BM</div> -->
-        <div class="logo-text">
-          <div class="brand-name">IM Compass</div>
-          <div class="brand-subtitle">Procedure Policy Assist Platform</div>
-        </div>
+        @if (collapsed()) {
+          
+        <div class="logo"><img src="../../../../BM-logo-32x32.png" title="IM Compass"></div>
+        }
+        @else
+        {
+          <div class="logo-text">
+            <div class="brand-name">IM Compass</div>
+            <div class="brand-subtitle">Procedure Policy Assist Platform</div>
+          </div>
+        }
       </div>
+  
+      <!-- Collapse Toggle Button -->
+      <button class="collapse-btn" (click)="toggleCollapse()" [title]="collapsed() ? 'Expand' : 'Collapse'">
+        {{ collapsed() ? '»' : '«' }}
+      </button>
     </div>
-    <nav class="sidebar-nav">
-      <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
-        <i class="nav-icon fa-solid fa-house-chimney-user"></i>
-        <span>Dashboard</span>
-      </a>
+  
+    <nav class="sidebar-nav"> 
       <a routerLink="/knowledge-queries" routerLinkActive="active" class="nav-item">
-        <i class="nav-icon fa-brands fa-searchengin"></i><span>Knowledge & Queries</span>
+        <i class="nav-icon fa-brands fa-searchengin"></i>
+        @if (!collapsed()) {  <span>Knowledge & Queries</span> }
       </a>
       <a routerLink="/gap-analysis" routerLinkActive="active" class="nav-item">
         <i class="nav-icon fa-solid fa-file-circle-exclamation"></i>
-        <span>Gap Analysis</span>
+        @if (!collapsed()) { <span>Gap Analysis</span> }
       </a>
       <a routerLink="/change-impact" routerLinkActive="active" class="nav-item">
-        <i class="nav-icon fa-solid fa-chart-line"></i><span>Change Impact</span>
+        <i class="nav-icon fa-solid fa-chart-line"></i>
+        @if (!collapsed()) { <span>Change Impact</span> }
       </a>
     </nav>
+  
     <div class="sidebar-footer">
       <div class="user-profile">
         <div class="user-avatar">JS</div>
-        <div class="user-details">
-          <div class="user-name">J Smith</div>
-          <div class="user-role">Senior Investment Manager</div>
-        </div>
+        @if (!collapsed()) {
+          <div class="user-details">
+            <div class="user-name">J Smith</div>
+            <div class="user-role">Senior Investment Manager</div>
+          </div>
+        }
       </div>
     </div>
   </div>
+  

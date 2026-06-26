@@ -7,7 +7,6 @@ export interface Policy {
   id: number;
   title: string;
   version: string;
-  impact: 'High' | 'Medium' | 'Low';
   description: string;
   date: Date;
   affected: string[];
@@ -32,6 +31,7 @@ export interface Gap {
   description: string;
   impact: string;
   recommendation: string;
+  date: Date;
 }
 
 // Models for Knowledge Queries
@@ -43,11 +43,12 @@ export interface QuestionRequest {
   text: string;
   domain?: string; 
   docType?: string;
-  lastUpdated?: Date; 
+  dateLastUpdated?: string; 
 }
 
 // Response from backend
-export interface Answer {
+export interface Answer { 
+  questionId: string;
   answerId: string;
   text: string;
   citations: Citation[];

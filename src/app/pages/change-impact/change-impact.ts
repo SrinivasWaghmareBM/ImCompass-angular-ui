@@ -1,103 +1,150 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { PolicyCardComponent } from '../../shared/policy-card/policy-card';
-import { policies } from './change-impact-data';
+import { Policy } from '../../models';
+import { samplePolicies } from './change-impact-data';
 
 @Component({
   selector: 'app-change-impact',
-  imports: [CommonModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule, PolicyCardComponent],
   templateUrl: './change-impact.html',
   styleUrl: './change-impact.css'
 })
 export class ChangeImpactComponent {
-  allPolicies = policies;
-  
-  // Filter selections
-  selectedTimePeriod = signal('Last 30 Days');
-  selectedImpactLevel = signal('All Impact Levels');
-  selectedArea = signal('All Areas');
-  
-  // Active dropdown
-  activeDropdown = signal<string | null>(null);
-  
-  // Accordion: only one policy open at a time
-  expandedPolicyId = signal<number | null>(null);
 
-  // Filter options
-  timePeriodOptions = ['Last 30 Days', 'Last 90 Days', 'Last 6 Months', 'Last Year', 'All Time'];
-  impactLevelOptions = ['All Impact Levels', 'High Impact', 'Medium Impact', 'Low Impact'];
-  areaOptions = ['All Areas', 'Trading Desk', 'Portfolio Management', 'Compliance', 'Operations'];
+  private http = inject(HttpClient);
 
-  // Filtered policies
-  filteredPolicies = computed(() => {
-    let result = this.allPolicies;
+  searchQuery = signal('');
+  selectedTimeFilter = signal('all');
+  selectedDomainFilter = signal('All');
 
-    // Filter by impact level
-    const impact = this.selectedImpactLevel();
-    if (impact !== 'All Impact Levels') {
-      const level = impact.replace(' Impact', '');
-      result = result.filter(p => p.impact === level);
+  expandedPolicies = signal<Set<number>>(new Set());
+  attestedPolicies = signal<Map<number, string>>(new Map());
+
+  policies: Policy[] = samplePolicies;
+  filteredPolicies = signal(this.policies);
+
+  constructor() {
+    this.applyFilters();
+  }
+
+  // Check if any filter is active
+  hasActiveFilters(): boolean {
+    return this.searchQuery() !== '' ||
+           this.selectedTimeFilter() !== 'all' ||
+           this.selectedDomainFilter() !== 'All';
+  }
+
+  clearFilters() {
+    this.searchQuery.set('');
+    this.selectedTimeFilter.set('all');
+    this.selectedDomainFilter.set('All');
+    this.applyFilters();
+  }
+
+  applyFilters() {
+    const query = this.searchQuery().toLowerCase();
+    const timeFilter = this.selectedTimeFilter();
+    const areaFilter = this.selectedDomainFilter();
+
+    const today = new Date();
+
+    let result = this.policies;
+
+    // Search filter
+    if (query) {
+      result = result.filter(p =>
+        p.title.toLowerCase().includes(query) ||
+        p.description.toLowerCase().includes(query)
+      );
     }
 
-    // Filter by area
-    const area = this.selectedArea();
-    if (area !== 'All Areas') {
-      result = result.filter(p => p.affected.includes(area));
+    // Date filter
+    if (timeFilter !== 'all') {
+      const daysFilter = parseInt(timeFilter, 10);
+      if (!isNaN(daysFilter)) {
+        result = result.filter(policy => {
+          const policyDate = new Date(policy.date);
+          const diffTime = Math.abs(today.getTime() - policyDate.getTime());
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          return diffDays <= daysFilter;
+        });
+      }
     }
 
-    return result;
-  });
+    // Area filter
+    if (areaFilter !== 'All') {
+      result = result.filter(p =>
+        p.affected.some(area => area.toLowerCase().includes(areaFilter.toLowerCase()))
+      );
+    }
 
-  toggleDropdown(dropdown: string) {
-    if (this.activeDropdown() === dropdown) {
-      this.activeDropdown.set(null);
+    this.filteredPolicies.set(result);
+  }
+
+  togglePolicy(id: number) {
+    const current = new Set(this.expandedPolicies());
+    if (current.has(id)) {
+      current.delete(id);
     } else {
-      this.activeDropdown.set(dropdown);
+      current.add(id);
+    }
+    this.expandedPolicies.set(current);
+  }
+
+  isExpanded(id: number): boolean {
+    return this.expandedPolicies().has(id);
+  }
+
+  getAttestedAt(policyId: number): string | null {
+    return this.attestedPolicies().get(policyId) || null;
+  }
+
+  // ==================== EVENT HANDLERS ====================
+
+  onViewFullPolicy(policy: Policy) {
+    const documentUrl = `/api/policies/${policy.id}/document`;
+    window.open(documentUrl, '_blank');
+  }
+
+  onDownloadSummary(policy: Policy) {
+    console.log('Download triggered for:', policy.title);
+  }
+
+  async onAttest(policy: Policy) {
+    const userId = 'user_12345';
+    const impactId = policy.id;
+
+    try {
+      // await this.http.post('/api/attest', {
+      //   impactId: impactId,
+      //   userId: userId
+      // }).toPromise();
+
+      const attestedTime = new Date().toLocaleString();
+      const currentAttested = new Map(this.attestedPolicies());
+      currentAttested.set(policy.id, attestedTime);
+      this.attestedPolicies.set(currentAttested);
+    } catch (error) {
+      console.error('Failed to attest policy:', error);
+      alert('Failed to record attestation. Please try again.');
     }
   }
 
-  selectTimePeriod(option: string) {
-    this.selectedTimePeriod.set(option);
-    this.activeDropdown.set(null);
+  onSearchChange() {
+    this.applyFilters();
   }
 
-  selectImpactLevel(option: string) {
-    this.selectedImpactLevel.set(option);
-    this.activeDropdown.set(null);
+  onTimeFilterChange(value: string) {
+    this.selectedTimeFilter.set(value);
+    this.applyFilters();
   }
 
-  selectArea(option: string) {
-    this.selectedArea.set(option);
-    this.activeDropdown.set(null);
-  }
-
-  togglePolicy(policyId: number) {
-    if (this.expandedPolicyId() === policyId) {
-      this.expandedPolicyId.set(null);
-    } else {
-      this.expandedPolicyId.set(policyId);
-    }
-  }
-
-  isPolicyExpanded(policyId: number): boolean {
-    return this.expandedPolicyId() === policyId;
-  }
-
-  getImpactClass(impact: string): string {
-    if (impact === 'High') return 'impact-badge high';
-    if (impact === 'Medium') return 'impact-badge medium';
-    return 'impact-badge low';
-  }
-
-  getChangeClass(type: string): string {
-    if (type === 'Added') return 'added';
-    if (type === 'Modified') return 'modified';
-    return 'removed';
-  }
-
-  clearAllFilters() {
-    this.selectedTimePeriod.set('Last 30 Days');
-    this.selectedImpactLevel.set('All Impact Levels');
-    this.selectedArea.set('All Areas');
+  onDomainFilterChange(value: string) {
+    this.selectedDomainFilter.set(value);
+    this.applyFilters();
   }
 }
